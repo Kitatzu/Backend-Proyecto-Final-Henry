@@ -7,8 +7,8 @@ const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 const sequelize = new Sequelize(
   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/pf`,
   {
-    logging: false, // set to console.log to see the raw SQL queries
-    native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+    logging: false,
+    native: false,
   }
 );
 const basename = path.basename(__filename);
@@ -35,11 +35,48 @@ let capsEntries = entries.map((entry) => [
 ]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-// En sequelize.models están todos los modelos importados como propiedades
-// Para relacionarlos hacemos un destructuring
-const { modelodeprueba } = sequelize.models;
+const {
+  Prueba,
+  Carts,
+  Categories,
+  Facturas,
+  Products,
+  ProductsInCart,
+  Reviews,
+  Roles,
+  Users,
+} = sequelize.models;
 
-// Reviews.belongsTo(Products);
+//TODO:RELACIONES
+
+Roles.hasMany(Users, { foreignKey: "rolId" });
+Users.belongsTo(Roles, { foreignKey: "rolId" });
+
+Carts.hasMany(Users, { foreignKey: "cartId" });
+Users.belongsTo(Carts, { foreignKey: "cartId" });
+
+Carts.hasMany(ProductsInCart, { foreignKey: "cartId" });
+ProductsInCart.belongsTo(Carts, { foreignKey: "cartId" });
+
+Products.hasMany(ProductsInCart, { foreignKey: "productId" });
+ProductsInCart.belongsTo(Products, { foreignKey: "productId" });
+
+Users.hasMany(Facturas, { foreignKey: "userId" });
+Facturas.belongsTo(Users, { foreignKey: "userId" });
+
+ProductsInCart.hasMany(Facturas, { foreignKey: "productInCartId" });
+Facturas.belongsTo(ProductsInCart, { foreignKey: "productInCartId" });
+
+Products.belongsToMany(Categories, { through: "categoriesInProducts" });
+Categories.belongsToMany(Products, { through: "categoriesInProducts" });
+
+Products.hasMany(Reviews, { foreignKey: "productId" });
+Reviews.belongsTo(Products, { foreignKey: "productId" });
+
+Users.hasMany(Reviews, { foreignKey: "userId" });
+Reviews.belongsTo(Users, { foreignKey: "userId" });
+
+//TODO:RELACIONES
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
