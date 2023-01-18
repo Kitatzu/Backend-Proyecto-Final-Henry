@@ -45,6 +45,10 @@ const {
   Reviews,
   Roles,
   Users,
+  Proveedores,
+  Ordenes,
+  Notifications,
+  Cupones,
 } = sequelize.models;
 
 //TODO:RELACIONES
@@ -76,6 +80,24 @@ Reviews.belongsTo(Products, { foreignKey: "productId" });
 Users.hasMany(Reviews, { foreignKey: "userId" });
 Reviews.belongsTo(Users, { foreignKey: "userId" });
 
+//TODO: CADA VENDEDOR Y ADMINISTRADOS PPUEDE AGREGAR UN PRODUCTO
+Users.belongsToMany(Products, { through: "usersProducts" });
+Products.belongsToMany(Users, { through: "usersProducts" });
+
+Users.hasMany(Notifications, { foreignKey: "userId" });
+Notifications.belongsTo(Users, { foreignKey: "userId" });
+
+Users.hasMany(Cupones, { foreignKey: "userId" });
+Cupones.belongsTo(Users, { foreignKey: "userId" });
+
+Proveedores.hasMany(Products, { foreignKey: "proveedorId" });
+Products.belongsTo(Proveedores, { foreignKey: "productId" });
+
+Facturas.hasMany(Ordenes, { foreignKey: "facturaId" });
+Ordenes.belongsTo(Facturas, { foreignKey: "facturaId" });
+
+Facturas.hasMany(Users, { foreignKey: "userId" });
+Users.belongsTo(Facturas, { foreignKey: "userId" });
 //TODO:RELACIONES
 
 module.exports = {
