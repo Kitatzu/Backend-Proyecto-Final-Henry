@@ -2,25 +2,25 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "facturas",
+    "cupones",
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      total: {
-        type: DataTypes.DOUBLE,
-        allowNull: false,
-      },
-      numeroFactura: {
+      descuento: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
         allowNull: false,
       },
-      pagoId: {
+      type: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      status: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
       },
     },
     {
