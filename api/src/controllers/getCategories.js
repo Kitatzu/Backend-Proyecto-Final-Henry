@@ -7,8 +7,14 @@ const getAllCategories = async (req, res) => {
       try {
         let categoriesDb = await Categories.findAll();
         categoriesDb.length
-          ? res.status(200).json(categoriesDb)
-          : res.status(404).json("There are no categories to display");
+          ? res.status(200).json({
+              Status: "Success",
+              Categories: categoriesDb,
+            })
+          : res.status(404).json({
+              Status: "Alert",
+              Message: "There are no categories to display",
+            });
       } catch (error) {
         res.status(500).json(error);
       }
@@ -18,7 +24,8 @@ const getAllCategories = async (req, res) => {
           name,
         },
       });
-      category?res.json(category):res.send("Category not found")
+      category  ? res.status(200).json({ Status: "Success", Category: category })
+      : res.json({ Status: "Alert", Message: "Category not found" });
     }
   } catch (error) {
     return res.status(500).send("ERROR: ", error);
@@ -29,8 +36,7 @@ const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
     const newCategory = await Categories.create({ name });
-    /*  res.send("Category created"); */
-    res.status(201).json("Category created successfully");
+    res.status(201).json({Message:"Category created successfully",newCategory});
   } catch (error) {
     res.status(500).json(error);
   }
@@ -40,10 +46,10 @@ const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
-    const category = await Categories.findByPk(id);
-    category.name = name;
-    await category.save();
-    res.send("Category updated successfully");
+    const categoryUpdated = await Categories.findByPk(id);
+    categoryUpdated.name = name;
+    await categoryUpdated.save();
+    res.status(200).json({Message:"Category updated successfully",categoryUpdated});
   } catch (error) {
     res.status(500).json(error);
   }
@@ -56,7 +62,7 @@ const deleteCategory = async (req, res) => {
         id,
       },
     });
-    res.send("Category successfully removed");
+    res.status(200).json({Message:"Category successfully removed"});
   } catch (error) {
     res.status(500).json(error);
   }
