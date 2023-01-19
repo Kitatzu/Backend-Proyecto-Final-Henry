@@ -96,8 +96,6 @@ Products.belongsTo(Proveedores, { foreignKey: "productId" });
 Facturas.hasMany(Ordenes, { foreignKey: "facturaId" });
 Ordenes.belongsTo(Facturas, { foreignKey: "facturaId" });
 
-Facturas.hasMany(Users, { foreignKey: "userId" });
-Users.belongsTo(Facturas, { foreignKey: "userId" });
 //TODO:RELACIONES
 
 module.exports = {
