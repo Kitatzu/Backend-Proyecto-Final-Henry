@@ -34,7 +34,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      stauts: {
+      status: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1,

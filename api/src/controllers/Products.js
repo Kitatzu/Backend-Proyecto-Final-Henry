@@ -48,33 +48,14 @@ const ProductsId= async(req,res)=>{
     } catch (error) {
         return res.status(400).send("unmatch id")
     }
-   /*  try {
-        if(id){
-            try {
-                let aux3=await Products.findByPk(id)
-            if(aux3){
-                idSearch.push(aux3);
-                return res.status(200).send(idSearch)
-            }else{
-                return res.status(400).send("unmatched product id")
-            }
-            } catch (error) {
-               return res.status(400).send("error searching product by id") 
-            }
-            
-        }
-    } catch (error) {
-        return res.status(400).send("error controller ProductsId")
-    }
-    */
 
 }
 
 
 const postProducts= async(req,res)=>{//rating va?
-    const {name,description,img,stock,price,rating}=req.body;
+    const {name,description,img,stock,price,rating,serieProducto,descuento,typeProduct,status,marca}=req.body;
     try {
-       let newProd=await Products.create({name,description,img,stock,price,rating});
+       let newProd=await Products.create({name,description,img,stock,price,rating,serieProducto,descuento,typeProduct,status,marca});
        return res.status(200).send("product added successfully"); 
     } catch (error) {
         return res.status(400).send("problems loading the product")
