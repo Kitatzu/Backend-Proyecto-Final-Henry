@@ -5,8 +5,10 @@ server.listen(3001, () => {
   console.log("%s listening at 3001");
   try {
     conn
-      .sync()
-      .then((response) => {})
+      .sync({ force: true })
+      .then((response) => {
+        console.log(response);
+      })
       .catch((e) => {
         console.log(e);
       });

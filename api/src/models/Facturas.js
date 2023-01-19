@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
       },
       numeroFactura: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
+        autoincrement: true,
         allowNull: false,
       },
       pagoId: {

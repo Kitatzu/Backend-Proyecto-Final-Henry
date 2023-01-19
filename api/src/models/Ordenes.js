@@ -10,6 +10,7 @@ module.exports = (sequelize) => {
     numeroDeOrden: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
+      allowNull: false,
     },
     status: {
       type: DataTypes.STRING,
