@@ -6,9 +6,7 @@ server.listen(3001, () => {
   try {
     conn
       .sync({ force: true })
-      .then((response) => {
-        console.log(response);
-      })
+      .then((response) => {})
       .catch((e) => {
         console.log(e);
       });
