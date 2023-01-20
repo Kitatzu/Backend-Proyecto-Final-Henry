@@ -1,14 +1,25 @@
-const { Products } = require("../db.js");
+const { Products, Categories, Proveedores } = require("../db.js");
 
 const productsByBrand = async (req, res) => {
   const { brand } = req.params;
   try {
     const filterBrands = await Products.findAll({
+      include: [
+        {
+          model: Categories,
+          attributes: ["name"],
+        },
+        {
+          model: Proveedores,
+          attributes: ["proveedor"],
+        },
+      ],
       where: {
         marca: brand,
+        status: 1,
       },
     });
-    
+
     filterBrands.length
       ? res.status(200).json({ Status: "Success", filterBrands })
       : res.status(400).json({
