@@ -91,7 +91,7 @@ Users.hasMany(Cupones, { foreignKey: "userId" });
 Cupones.belongsTo(Users, { foreignKey: "userId" });
 
 Proveedores.hasMany(Products, { foreignKey: "proveedorId" });
-Products.belongsTo(Proveedores, { foreignKey: "productId" });
+Products.belongsTo(Proveedores, { foreignKey: "proveedorId" });
 
 Facturas.hasMany(Ordenes, { foreignKey: "facturaId" });
 Ordenes.belongsTo(Facturas, { foreignKey: "facturaId" });
