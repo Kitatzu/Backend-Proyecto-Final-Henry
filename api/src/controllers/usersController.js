@@ -1,4 +1,4 @@
-const { Users } = require("../db.js");
+const { Users, Roles } = require("../db.js");
 
 async function allUsers(req, res) {
   let { userName } = req.query;
@@ -7,6 +7,10 @@ async function allUsers(req, res) {
     try {
       let findUser = await Users.findAll({
         where: { userName },
+        include: {
+          model: Roles,
+          attributes: ["rol"],
+        },
       });
 
       findUser
@@ -17,7 +21,12 @@ async function allUsers(req, res) {
     }
   } else {
     try {
-      let allUsers = await Users.findAll();
+      let allUsers = await Users.findAll({
+        include: {
+          model: Roles,
+          attributes: ["rol"],
+        },
+      });
 
       res.status(200).json(allUsers);
     } catch (error) {
