@@ -1,24 +1,22 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  sequelize.define("carts", {
+  sequelize.define("ordenes", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
       primaryKey: true,
     },
-    totalPrice: {
-      type: DataTypes.DOUBLE,
-      defaultValue: 0.0,
-      validate: {
-        min: 0.0,
-      },
+    numeroDeOrden: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
     },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
-
-      defaultValue: "pending",
+      defaultValue: "CREATE",
     },
   });
 };

@@ -1,24 +1,25 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  sequelize.define("carts", {
+  sequelize.define("config", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    totalPrice: {
+    iva: {
       type: DataTypes.DOUBLE,
-      defaultValue: 0.0,
-      validate: {
-        min: 0.0,
-      },
+      allowNull: false,
+      defaultValue: 12.0,
     },
-    status: {
+    ruc: {
       type: DataTypes.STRING,
       allowNull: false,
-
-      defaultValue: "pending",
+      defaultValue: "999999",
+    },
+    razonSocial: {
+      type: DataTypes.STRING,
+      allowNUll: false,
     },
   });
 };

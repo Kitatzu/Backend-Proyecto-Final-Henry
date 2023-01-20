@@ -36,7 +36,6 @@ let capsEntries = entries.map((entry) => [
 sequelize.models = Object.fromEntries(capsEntries);
 
 const {
-  Prueba,
   Carts,
   Categories,
   Facturas,
@@ -45,6 +44,10 @@ const {
   Reviews,
   Roles,
   Users,
+  Proveedores,
+  Ordenes,
+  Notifications,
+  Cupones,
 } = sequelize.models;
 
 //TODO:RELACIONES
@@ -75,6 +78,22 @@ Reviews.belongsTo(Products, { foreignKey: "productId" });
 
 Users.hasMany(Reviews, { foreignKey: "userId" });
 Reviews.belongsTo(Users, { foreignKey: "userId" });
+
+//TODO: CADA VENDEDOR Y ADMINISTRADOS PPUEDE AGREGAR UN PRODUCTO
+Users.belongsToMany(Products, { through: "usersProducts" });
+Products.belongsToMany(Users, { through: "usersProducts" });
+
+Users.hasMany(Notifications, { foreignKey: "userId" });
+Notifications.belongsTo(Users, { foreignKey: "userId" });
+
+Users.hasMany(Cupones, { foreignKey: "userId" });
+Cupones.belongsTo(Users, { foreignKey: "userId" });
+
+Proveedores.hasMany(Products, { foreignKey: "proveedorId" });
+Products.belongsTo(Proveedores, { foreignKey: "proveedorId" });
+
+Facturas.hasMany(Ordenes, { foreignKey: "facturaId" });
+Ordenes.belongsTo(Facturas, { foreignKey: "facturaId" });
 
 //TODO:RELACIONES
 

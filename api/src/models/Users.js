@@ -23,6 +23,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      fechaNacimiento: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
       userName: {
         type: DataTypes.STRING,
         unique: true,
