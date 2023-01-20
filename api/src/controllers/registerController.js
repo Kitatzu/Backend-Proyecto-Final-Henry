@@ -1,7 +1,7 @@
-const { Users, Carts } = require("../db.js");
+const { Users, Carts, Roles } = require("../db.js");
 
 async function register(req, res) {
-  let { firstName, lastName, fechaNacimiento, userName, email, password } =
+  let { firstName, lastName, fechaNacimiento, userName, email, password, rol } =
     req.body;
 
   try {
@@ -17,19 +17,42 @@ async function register(req, res) {
       totalPrice: 0,
     });
 
-    let newUser = await Users.create({
-      firstName: firstName,
-      lastName: lastName,
-      fechaNacimiento: fechaNacimiento,
-      userName: userName,
-      email: email,
-      password: password,
-      cartId: newCart.id,
-    });
+    if (rol) {
+      let findRole = await Roles.findOne({ where: { rol } });
 
-    res
-      .status(200)
-      .json({ message: "Succefully registered", ...newUser.dataValues });
+      let newUser = await Users.create({
+        firstName: firstName,
+        lastName: lastName,
+        fechaNacimiento: fechaNacimiento,
+        userName: userName,
+        email: email,
+        password: password,
+        cartId: newCart.id,
+      });
+
+      await newUser.setRole(findRole);
+
+      res
+        .status(200)
+        .json({ message: "Succefully registered", ...newUser.dataValues });
+    } else {
+      let userRole = await Roles.findOne({ where: { rol: "User" } });
+      let newUser = await Users.create({
+        firstName: firstName,
+        lastName: lastName,
+        fechaNacimiento: fechaNacimiento,
+        userName: userName,
+        email: email,
+        password: password,
+        cartId: newCart.id,
+      });
+
+      await newUser.setRole(userRole);
+
+      res
+        .status(200)
+        .json({ message: "Succefully registered", ...newUser.dataValues });
+    }
   } catch (error) {
     res.status(400).json({ message: error });
   }
