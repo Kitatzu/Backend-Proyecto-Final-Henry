@@ -9,8 +9,14 @@ async function getProducts(req, res) {
         let nameP = await Products.findAll({
           where: { status: 1 },
           include: [
-            { model: Categories, attributes: ["name"] },
-            { model: Proveedores, attributes: ["proveedor"] },
+            {
+              model: Categories,
+              attributes: ["name"],
+            },
+            {
+              model: Proveedores,
+              attributes: ["proveedor"],
+            },
           ],
         });
         for (let i of nameP) {
@@ -33,12 +39,18 @@ async function getProducts(req, res) {
         let aux2 = await Products.findAll({
           where: { status: 1 },
           include: [
-            { model: Categories, attributes: ["name"] },
-            { model: Proveedores, attributes: ["proveedor"] },
+            {
+              model: Categories,
+              attributes: ["name"],
+            },
+            {
+              model: Proveedores,
+              attributes: ["proveedor"],
+            },
           ],
         });
-        reqProd.push(aux2);
-        return res.status(200).json(reqProd);
+
+        return res.status(200).json(aux2);
       } catch (error) {
         return res
           .status(400)
