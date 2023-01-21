@@ -1,15 +1,14 @@
+
+require("dotenv").config;
+const { PORT } = process.env;
 const server = require("./src/app.js");
 const { conn } = require("./src/db.js");
-
 const {
   createRoles,
   createCategories,
   createProviders,
   createBrands,
 } = require("./src/middlewares/initServer.js");
-require("dotenv").config;
-const { PORT } = process.env;
-
 
 server.listen(PORT, () => {
   console.log(`%s listening at ${PORT}`);
@@ -22,8 +21,6 @@ server.listen(PORT, () => {
         createProviders();
         createBrands();
       })
-      .sync()
-      .then((response) => {})
       .catch((e) => {
         console.log(e);
       });
