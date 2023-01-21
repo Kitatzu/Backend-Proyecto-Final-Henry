@@ -1,4 +1,4 @@
-const { Roles, Categories, Proveedores } = require("../db.js");
+const { Roles, Categories, Proveedores, Brands } = require("../db.js");
 
 async function createRoles() {
   try {
@@ -27,6 +27,9 @@ async function createCategories() {
       await Categories.create({ name: "Computadora" }),
       await Categories.create({ name: "Motherboard" }),
       await Categories.create({ name: "Almacenamiento" }),
+      await Categories.create({ name: "Periferico" }),
+      await Categories.create({ name: "Monitor" }),
+      await Categories.create({ name: "Fuente de alimentacion" }),
     ]);
   } catch (error) {
     console.log(error);
@@ -65,5 +68,32 @@ async function createProviders() {
     console.log(error);
   }
 }
-
-module.exports = { createRoles, createCategories, createProviders };
+//TODO:PERDONAME LA VIDA!xD
+async function createBrands() {
+  try {
+    const allBrands = await Brands.findAll();
+    if (allBrands.length) return;
+    const brands = await Promise.all([
+      await Brands.create({ brand: "Intel" }),
+      await Brands.create({ brand: "Nvidia" }),
+      await Brands.create({ brand: "Amd" }),
+      await Brands.create({ brand: "Adata" }),
+      await Brands.create({ brand: "Toshiba" }),
+      await Brands.create({ brand: "Samsung" }),
+      await Brands.create({ brand: "Arktek" }),
+      await Brands.create({ brand: "Gigabyte" }),
+      await Brands.create({ brand: "Asus" }),
+      await Brands.create({ brand: "MSI" }),
+      await Brands.create({ brand: "Asrock" }),
+      await Brands.create({ brand: "Scorpion" }),
+    ]);
+  } catch (e) {
+    console.error(error);
+  }
+}
+module.exports = {
+  createRoles,
+  createCategories,
+  createProviders,
+  createBrands,
+};

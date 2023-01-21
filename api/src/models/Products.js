@@ -20,11 +20,7 @@ module.exports = (sequelize) => {
       img: {
         type: DataTypes.STRING,
       },
-      serieProducto: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-      },
+
       descuento: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -34,15 +30,17 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      stock: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       status: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 1,
+        defaultValue: 0,
       },
-      marca: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+
       price: {
         type: DataTypes.DOUBLE,
         allowNull: false,
@@ -52,6 +50,7 @@ module.exports = (sequelize) => {
       },
       rating: {
         type: DataTypes.INTEGER,
+        defaultValue: 0,
         validate: {
           min: 0,
           max: 5,

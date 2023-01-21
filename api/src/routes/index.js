@@ -9,11 +9,12 @@ const filterByCategoryRoutes = require("./filterByCategoriesRoutes");
 const registerRoutes = require("./registerRoutes");
 const loginRoutes = require("./loginRoutes");
 const usersRoutes = require("./usersRoutes");
-
+const seriesRoute = require("./seriesRoute");
 router.use("/categories", categoriesRoutes);
 router.use("/products", ProductsRoutes);
 router.use("/providers", providersRoutes);
 router.use("/search", searchRoutes);
+router.use("/series", seriesRoute);
 router.use("/brand", filterByBrandRoutes);
 router.use("/filter", filterByCategoryRoutes);
 router.use("/register", registerRoutes);
