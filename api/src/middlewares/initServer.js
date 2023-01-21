@@ -23,6 +23,8 @@ async function createCategories() {
     if (allCategories.length) return;
 
     const categories = await Promise.all([
+      await Categories.create({ name: "Placa de video" }),
+      await Categories.create({ name: "Procesador" }),
       await Categories.create({ name: "Ram" }),
       await Categories.create({ name: "Computadora" }),
       await Categories.create({ name: "Motherboard" }),

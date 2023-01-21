@@ -119,7 +119,6 @@ const postProducts = async (req, res) => {
     price,
     descuento,
     typeProduct,
-    marca,
     proveedor,
     rating,
     brand,
@@ -135,7 +134,6 @@ const postProducts = async (req, res) => {
       price,
       descuento,
       typeProduct,
-      marca,
       rating,
     });
 
