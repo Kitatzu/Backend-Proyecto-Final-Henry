@@ -10,6 +10,8 @@ const registerRoutes = require("./registerRoutes");
 const loginRoutes = require("./loginRoutes");
 const usersRoutes = require("./usersRoutes");
 const seriesRoute = require("./seriesRoute");
+const brandsRoutes = require("./brandsRoutes");
+
 router.use("/categories", categoriesRoutes);
 router.use("/products", ProductsRoutes);
 router.use("/providers", providersRoutes);
@@ -19,6 +21,7 @@ router.use("/brand", filterByBrandRoutes);
 router.use("/filter", filterByCategoryRoutes);
 router.use("/register", registerRoutes);
 router.use("/login", loginRoutes);
+router.use("/brands", brandsRoutes);
 router.use("/users", usersRoutes);
 
 module.exports = router;

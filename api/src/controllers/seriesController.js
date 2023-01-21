@@ -2,6 +2,7 @@ const { Products, Series } = require("../db");
 const { Op } = require("sequelize");
 const addSerieProduct = async (req, res) => {
   const { serie, productId } = req.body;
+  console.log(serie, productId);
   try {
     const findProduct = await Products.findByPk(productId);
     console.log(findProduct);
@@ -14,9 +15,11 @@ const addSerieProduct = async (req, res) => {
     });
     console.log(stock);
     await findProduct.update({ stock, status: 1 });
-    return res
-      .status(200)
-      .json({ status: "success", msg: "Serie agregada correctamente!" });
+    return res.status(200).json({
+      status: "success",
+      msg: "Serie agregada correctamente!",
+      newSerie,
+    });
   } catch (e) {
     console.log(e);
     return res
