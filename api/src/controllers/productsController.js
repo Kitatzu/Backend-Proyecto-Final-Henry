@@ -169,10 +169,35 @@ async function updateProducts(req, res) {
   } catch (error) {}
 }
 
+async function pageCurrent(req, res) {
+  let  { id }  = req.params;          // capturamos el numero de pagina
+  let SelectedP =[];                  // declaramos el contenedor para las paginas filtradas
+  itemsPage = parseInt(id);           //  convertimos a numero el string id para poderlo usar en operaciones de suma
+    
+  let EndCursor = itemsPage * 10;                  // final del cursor de rango de seleccion de items de pagina  *10 items por pagina
+  let StartCursor = EndCursor - 10 ;                // inicio del cursor de rango de seleccion de iterms de pagina 
+  
+  try {
+    let Productos = await Products.findAll();     // bajamos los pruductos de Products a Productos con sequelize
+    const ProductosArray = Object.entries(Productos);   // convertimos Productos(objeto) en array para poder aplicar slice
+
+SelectedP = ProductosArray.slice(StartCursor,EndCursor);  // generamos la rebanada deade un start(inicio) a un final(end) 
+
+//console.log("Start ", StartCursor);    // para pruebas y control paginado
+//console.log("End ", EndCursor);         // par pruenas y control paginadp
+
+
+    res.status(200).json(  SelectedP );   // enviamos la rebanada(slice) correspondiente
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+}
+
 module.exports = {
   postProducts,
   getProducts,
   productsId,
   updateProducts,
   deleteProducts,
+  pageCurrent,
 };
