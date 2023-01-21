@@ -228,6 +228,28 @@ async function pageCurrent(req, res) {
   }
 }
 
+async function sortProducts(req, res) {
+  let  { id }  = req.params;          // se captura para el sort de ascendente a descendente entrada con "minusculas"
+   let Productos;
+  try {
+    
+    if (id == "a") {
+    Productos = await Products.findAll({
+      order: [["name", "ASC"]]
+    });     
+  }
+  
+  if (id == "z") {
+    Productos = await Products.findAll({
+      order: [["name", "DESC"]]
+    });     
+  }
+    res.status(200).json(  Productos );   
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+}
+
 module.exports = {
   postProducts,
   getProducts,
@@ -235,4 +257,5 @@ module.exports = {
   updateProducts,
   deleteProducts,
   pageCurrent,
+  sortProducts,
 };
