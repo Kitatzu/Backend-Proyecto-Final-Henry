@@ -4,6 +4,7 @@ const {
   createRoles,
   createCategories,
   createProviders,
+  createBrands,
 } = require("./src/middlewares/initServer.js");
 
 server.listen(3001, () => {
@@ -15,6 +16,7 @@ server.listen(3001, () => {
         createRoles();
         createCategories();
         createProviders();
+        createBrands();
       })
       .catch((e) => {
         console.log(e);

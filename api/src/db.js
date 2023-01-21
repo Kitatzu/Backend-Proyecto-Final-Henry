@@ -48,6 +48,8 @@ const {
   Ordenes,
   Notifications,
   Cupones,
+  Series,
+  Brands,
 } = sequelize.models;
 
 //TODO:RELACIONES
@@ -95,6 +97,11 @@ Products.belongsTo(Proveedores, { foreignKey: "proveedorId" });
 Facturas.hasMany(Ordenes, { foreignKey: "facturaId" });
 Ordenes.belongsTo(Facturas, { foreignKey: "facturaId" });
 
+Products.hasMany(Series, { foreignKey: "productId" });
+Series.belongsTo(Products, { foreignKey: "productId" });
+
+Brands.hasMany(Products, { foreignKey: "brandId" });
+Products.belongsTo(Brands, { foreignKey: "brandId" });
 //TODO:RELACIONES
 
 module.exports = {
