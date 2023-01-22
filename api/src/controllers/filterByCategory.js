@@ -4,6 +4,7 @@ const productsByCategory = async (req, res) => {
   const { category } = req.params;
   try {
     const filterCategories = await Products.findAll({
+      where: { status: { [Op.eq]: 1 } },
       include: {
         model: Categories,
         attributes: ["name"],
