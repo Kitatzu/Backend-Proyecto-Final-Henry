@@ -2,7 +2,7 @@ const { Products, Categories, Proveedores } = require("../db");
 const { Op } = require("sequelize");
 
 const search = async (req, res) => {
-  const { name } = req.query;
+  const { value } = req.params;
   try {
     const searchP = await Products.findAll({
       include: [
@@ -16,10 +16,7 @@ const search = async (req, res) => {
         },
       ],
       where: {
-        name: {
-          [Op.substring]: name,
-        },
-        status: 1,
+        [Op.and]: [{ name: { [Op.iLike]: "%" + value + "%" } }, { status: 1 }],
       },
     });
     if (searchP.length) {

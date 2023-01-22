@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Products, Categories, Proveedores, Brands, Series } = require("../db");
 
 async function getProducts(req, res) {
@@ -207,44 +208,62 @@ async function updateProducts(req, res) {
 
 async function pageCurrent(req, res) {
   let { id } = req.params; // capturamos el numero de pagina
-  let SelectedP = []; // declaramos el contenedor para las paginas filtradas
-  itemsPage = parseInt(id); //  convertimos a numero el string id para poderlo usar en operaciones de suma
+  //TODO:PAGINAS
+  console.log(id);
+  if (id === "0") {
+    try {
+      const findProducts = await Products.findAll({
+        where: { status: { [Op.eq]: 1 } },
+      });
+      console.log(findProducts);
+      const pages = Math.ceil(findProducts.length / 10);
+      return res.status(200).json({ status: "success", pages });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ status: "error", e });
+    }
+    //TODO:PAGINAS
+  } else {
+    let SelectedP = []; // declaramos el contenedor para las paginas filtradas
+    itemsPage = parseInt(id); //  convertimos a numero el string id para poderlo usar en operaciones de suma
 
-  let EndCursor = itemsPage * 10; // final del cursor de rango de seleccion de items de pagina  *10 items por pagina
-  let StartCursor = EndCursor - 10; // inicio del cursor de rango de seleccion de iterms de pagina
+    let EndCursor = itemsPage * 10; // final del cursor de rango de seleccion de items de pagina  *10 items por pagina
+    let StartCursor = EndCursor - 10; // inicio del cursor de rango de seleccion de iterms de pagina
 
-  try {
-    let Productos = await Products.findAll(); // bajamos los pruductos de Products a Productos con sequelize
-    const ProductosArray = Object.entries(Productos); // convertimos Productos(objeto) en array para poder aplicar slice
+    try {
+      let Productos = await Products.findAll({
+        where: { status: { [Op.eq]: 1 } },
+      }); // bajamos los pruductos de Products a Productos con sequelize
+      const ProductosArray = Productos; // convertimos Productos(objeto) en array para poder aplicar slice
 
-    SelectedP = ProductosArray.slice(StartCursor, EndCursor); // generamos la rebanada deade un start(inicio) a un final(end)
+      SelectedP = ProductosArray.slice(StartCursor, EndCursor); // generamos la rebanada deade un start(inicio) a un final(end)
 
-    //console.log("Start ", StartCursor);    // para pruebas y control paginado
-    //console.log("End ", EndCursor);         // par pruenas y control paginadp
+      //console.log("Start ", StartCursor);    // para pruebas y control paginado
+      //console.log("End ", EndCursor);         // par pruenas y control paginadp
 
-    res.status(200).json(SelectedP); // enviamos la rebanada(slice) correspondiente
-  } catch (error) {
-    res.status(400).json({ message: error });
+      res.status(200).json(SelectedP); // enviamos la rebanada(slice) correspondiente
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
   }
 }
 
 async function sortProducts(req, res) {
-  let  { id }  = req.params;          // se captura para el sort de ascendente a descendente entrada con "minusculas"
-   let Productos;
+  let { id } = req.params; // se captura para el sort de ascendente a descendente entrada con "minusculas"
+  let Productos;
   try {
-    
     if (id == "a") {
-    Productos = await Products.findAll({
-      order: [["name", "ASC"]]
-    });     
-  }
-  
-  if (id == "z") {
-    Productos = await Products.findAll({
-      order: [["name", "DESC"]]
-    });     
-  }
-    res.status(200).json(  Productos );   
+      Productos = await Products.findAll({
+        order: [["name", "ASC"]],
+      });
+    }
+
+    if (id == "z") {
+      Productos = await Products.findAll({
+        order: [["name", "DESC"]],
+      });
+    }
+    res.status(200).json(Productos);
   } catch (error) {
     res.status(400).json({ message: error });
   }
