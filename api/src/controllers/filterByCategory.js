@@ -1,4 +1,5 @@
 const { Products, Categories, Proveedores } = require("../db.js");
+const { Op } = require("sequelize");
 
 const productsByCategory = async (req, res) => {
   const { category } = req.params;
