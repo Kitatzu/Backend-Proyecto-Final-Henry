@@ -8,13 +8,28 @@ const {
   pageCurrent,
   sortProducts,
 } = require("../controllers/productsController");
+const fileupload = require("express-fileupload");
 const router = Router();
 
 router.get("/", getProducts);
 router.get("/:id", productsId);
-router.post("/", postProducts);
+router.post(
+  "/",
+  fileupload({
+    useTempFiles: true,
+    tempFileDir: "./uploads",
+  }),
+  postProducts
+);
 router.delete("/:id", deleteProducts);
-router.put("/:id", updateProducts);
+router.put(
+  "/:id",
+  fileupload({
+    useTempFiles: true,
+    tempFileDir: "./uploads",
+  }),
+  updateProducts
+);
 router.get("/page/:id", pageCurrent);
 router.get("/sort/:id", sortProducts);
 
