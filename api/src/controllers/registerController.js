@@ -1,4 +1,6 @@
 const { Users, Carts, Roles } = require("../db.js");
+const jwt=require("jsonwebtoken");//token
+const bcrypt=require("bcryptjs"); //hash
 
 async function register(req, res) {
   let { firstName, lastName, fechaNacimiento, userName, email, password, rol } =
@@ -26,7 +28,7 @@ async function register(req, res) {
         fechaNacimiento: fechaNacimiento,
         userName: userName,
         email: email,
-        password: password,
+        password:  await bcrypt.hash(password,10),
         cartId: newCart.id,
       });
 
@@ -43,12 +45,16 @@ async function register(req, res) {
         fechaNacimiento: fechaNacimiento,
         userName: userName,
         email: email,
-        password: password,
+        password:  await bcrypt.hash(password,10),
         cartId: newCart.id,
       });
 
       await newUser.setRole(userRole);
 
+      let token=jwt.sign({//creo token
+        id:newUser.cartId,
+        name:userName
+      },process.env.TOKEN)
       res
         .status(200)
         .json({ message: "Succefully registered", ...newUser.dataValues });
