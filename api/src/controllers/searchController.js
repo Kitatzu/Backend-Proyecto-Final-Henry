@@ -12,7 +12,7 @@ const search = async (req, res) => {
         },
         {
           model: Proveedores,
-          attributes: ["proveedor"],
+          attributes: ["provider"],
         },
       ],
       where: {

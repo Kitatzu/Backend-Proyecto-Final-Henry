@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
     imgId: {
       type: DataTypes.STRING,
     },
-    descuento: {
+    discount: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
