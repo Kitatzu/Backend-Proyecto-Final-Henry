@@ -1,6 +1,6 @@
 const { Users, Carts, Roles } = require("../db.js");
 const jwt=require("jsonwebtoken");//token
-const bcrypt=require("bcryptjs"); //hash
+const bcrypt=require("bcrypt"); //hash
 
 async function register(req, res) {
   let { firstName, lastName, fechaNacimiento, userName, email, password, rol } =

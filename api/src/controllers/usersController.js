@@ -1,4 +1,5 @@
 const { Users, Roles } = require("../db.js");
+const nodemailer = require('nodemailer');
 
 async function allUsers(req, res) {
   let { userName } = req.query;
@@ -35,4 +36,40 @@ async function allUsers(req, res) {
   }
 }
 
-module.exports = { allUsers };
+
+async function boxSend (req, res) {
+  let { correo } = req.body;
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "valcoellar@gmail.com", 
+    pass: "rnrlnllvfcbjcvsf", 
+  },
+  });  
+
+// messages ----------------------
+
+let accion = 'exito';
+if (accion == "exito"){
+  let info = await transporter.sendMail({
+    from: '"Boxtech" <account@boxtech.com>', 
+    to: correo, // receivers
+    subject: "Boxtech", // Subject line
+    text: "Thank you for your purchase!!", // plain text body
+    html: "<b>Thank you for your purchase!!</b>", // html body
+  });
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+module.exports = { allUsers, boxSend };
