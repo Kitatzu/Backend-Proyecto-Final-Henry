@@ -13,12 +13,12 @@ module.exports = (sequelize) => {
         type: DataTypes.DOUBLE,
         allowNull: false,
       },
-      numeroFactura: {
+      numberBill: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
       },
-      pagoId: {
+      paymentId: {
         type: DataTypes.STRING,
         allowNull: false,
       },

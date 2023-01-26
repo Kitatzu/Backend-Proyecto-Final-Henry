@@ -23,8 +23,8 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      fechaNacimiento: {
-        type: DataTypes.DATE,
+      birthday: {
+        type: DataTypes.DATEONLY,
         allowNull: false,
       },
       userName: {

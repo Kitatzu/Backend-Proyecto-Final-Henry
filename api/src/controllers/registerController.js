@@ -1,10 +1,22 @@
 const { Users, Carts, Roles } = require("../db.js");
-const jwt=require("jsonwebtoken");//token
-const bcrypt=require("bcrypt"); //hash
+const jwt = require("jsonwebtoken"); //token
+const bcrypt = require("bcrypt"); //hash
+const fs = require("fs-extra");
+const { uploadAvatarImage } = require("../middlewares/cloudinary.js");
+
 
 async function register(req, res) {
-  let { firstName, lastName, fechaNacimiento, userName, email, password, rol } =
-    req.body;
+  let {
+    firstName,
+    lastName,
+    birthday,
+    userName,
+    email,
+    password,
+    country,
+    phone,
+    rol,
+  } = req.body;
 
   try {
     let findUserName = await Users.findOne({ where: { userName } });
@@ -15,49 +27,158 @@ async function register(req, res) {
     if (findEmail)
       return res.status(400).json(`the email ${email} is registered`);
 
-    const newCart = await Carts.create({
-      totalPrice: 0,
-    });
+    if (req.files?.avatar) {
+      try {
+        const newCart = await Carts.create({
+          totalPrice: 0,
+        });
 
-    if (rol) {
-      let findRole = await Roles.findOne({ where: { rol } });
+        const avatarImg = await uploadAvatarImage(
+          req.files.avatar.tempFilePath
+        );
 
-      let newUser = await Users.create({
-        firstName: firstName,
-        lastName: lastName,
-        fechaNacimiento: fechaNacimiento,
-        userName: userName,
-        email: email,
-        password:  await bcrypt.hash(password,10),
-        cartId: newCart.id,
-      });
+        if (rol) {
+          let findRole = await Roles.findOne({ where: { rol } });
 
-      await newUser.setRole(findRole);
+          let newUser = await Users.create({
+            avatar: avatarImg.secure_url,
+            avatarId: avatarImg.public_id,
+            firstName: firstName,
+            lastName: lastName,
+            birthday: birthday,
+            userName: userName,
+            email: email,
+            password: await bcrypt.hash(password, 10),
+            country,
+            phone,
+            cartId: newCart.id,
+          });
 
-      res
-        .status(200)
-        .json({ message: "Succefully registered", ...newUser.dataValues });
+          await fs.unlink(req.files.avatar.tempFilePath);
+
+          await newUser.setRole(findRole);
+
+          let token = jwt.sign(
+            {
+              //creo token
+              id: newUser.cartId,
+              name: userName,
+              role: rol,
+            },
+            process.env.TOKEN
+          );
+
+          res.status(200).json({
+            message: "Succefully registered",
+            ...newUser.dataValues,
+            token,
+          });
+        } else {
+          let userRole = await Roles.findOne({ where: { rol: "User" } });
+          let newUser = await Users.create({
+            avatar: avatarImg.secure_url,
+            avatarId: avatarImg.public_id,
+            firstName: firstName,
+            lastName: lastName,
+            birthday: birthday,
+            userName: userName,
+            email: email,
+            password: await bcrypt.hash(password, 10),
+            country,
+            phone,
+            cartId: newCart.id,
+          });
+
+          await fs.unlink(req.files.avatar.tempFilePath);
+
+          await newUser.setRole(userRole);
+
+          let token = jwt.sign(
+            {
+              //creo token
+              id: newUser.cartId,
+              name: userName,
+              role: rol,
+            },
+            process.env.TOKEN
+          );
+          res.status(200).json({
+            message: "Succefully registered",
+            ...newUser.dataValues,
+            token,
+          });
+        }
+      } catch (error) {
+        res.status(400).json({ message: error });
+      }
     } else {
-      let userRole = await Roles.findOne({ where: { rol: "User" } });
-      let newUser = await Users.create({
-        firstName: firstName,
-        lastName: lastName,
-        fechaNacimiento: fechaNacimiento,
-        userName: userName,
-        email: email,
-        password:  await bcrypt.hash(password,10),
-        cartId: newCart.id,
+      const newCart = await Carts.create({
+        totalPrice: 0,
       });
 
-      await newUser.setRole(userRole);
+      if (rol) {
+        let findRole = await Roles.findOne({ where: { rol } });
 
-      let token=jwt.sign({//creo token
-        id:newUser.cartId,
-        name:userName
-      },process.env.TOKEN)
-      res
-        .status(200)
-        .json({ message: "Succefully registered", ...newUser.dataValues });
+        let newUser = await Users.create({
+          firstName: firstName,
+          lastName: lastName,
+          birthday: birthday,
+          userName: userName,
+          email: email,
+          password: await bcrypt.hash(password, 10),
+          country,
+          phone,
+          cartId: newCart.id,
+        });
+
+        await newUser.setRole(findRole);
+
+        let token = jwt.sign(
+          {
+            //creo token
+            id: newUser.cartId,
+            name: userName,
+            role: rol,
+          },
+          process.env.TOKEN
+        );
+
+        res.status(200).json({
+          message: "Succefully registered",
+          ...newUser.dataValues,
+          token,
+        });
+      } else {
+        let userRole = await Roles.findOne({ where: { rol: "User" } });
+        let newUser = await Users.create({
+          firstName: firstName,
+          lastName: lastName,
+          birthday: birthday,
+          userName: userName,
+          email: email,
+          password: await bcrypt.hash(password, 10),
+          country,
+          phone,
+          cartId: newCart.id,
+        });
+
+        await newUser.setRole(userRole);
+
+        let token = jwt.sign(
+          {
+            //creo token
+            id: newUser.cartId,
+            name: userName,
+            role: rol,
+          },
+          process.env.TOKEN
+        );
+        res.status(200).json({
+          message: "Succefully registered",
+          ...newUser.dataValues,
+          token,
+        });
+      }
     }
   } catch (error) {
     res.status(400).json({ message: error });

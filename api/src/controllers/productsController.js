@@ -1,5 +1,10 @@
 const { Op } = require("sequelize");
 const { Products, Categories, Proveedores, Brands, Series } = require("../db");
+const {
+  uploadProductImage,
+  updateProductImage,
+} = require("../middlewares/cloudinary.js");
+const fs = require("fs-extra");
 
 async function getProducts(req, res) {
   const name = req.query.name;
@@ -16,7 +21,7 @@ async function getProducts(req, res) {
             },
             {
               model: Proveedores,
-              attributes: ["proveedor"],
+              attributes: ["provider"],
             },
             {
               model: Brands,
@@ -54,7 +59,7 @@ async function getProducts(req, res) {
             },
             {
               model: Proveedores,
-              attributes: ["proveedor"],
+              attributes: ["provider"],
             },
             {
               model: Brands,
@@ -91,7 +96,7 @@ async function productsId(req, res) {
         },
         {
           model: Proveedores,
-          attributes: ["proveedor"],
+          attributes: ["provider"],
         },
         {
           model: Brands,
@@ -111,52 +116,84 @@ async function productsId(req, res) {
 
 const postProducts = async (req, res) => {
   const {
-    status,
     name,
     description,
-    img,
     categories,
-    serieProducto,
-    price,
-    descuento,
+    discount,
     typeProduct,
-    proveedor,
+    provider,
+    price,
     rating,
     brand,
   } = req.body;
 
-  try {
-    let newProduct = await Products.create({
-      status,
-      name,
-      description,
-      img,
-      serieProducto,
-      price,
-      descuento,
-      typeProduct,
-      rating,
-    });
+  if (req.files?.img) {
+    try {
+      const result = await uploadProductImage(req.files.img.tempFilePath);
+      let newProduct = await Products.create({
+        name,
+        description,
+        img: result.secure_url,
+        imgId: result.public_id,
+        discount,
+        typeProduct,
+        price,
+        rating,
+      });
 
-    let allCategories = await Categories.findAll({
-      where: { name: categories },
-    });
-    const findBrand = await Brands.findOne({ where: { brand } });
-    console.log(findBrand);
-    await newProduct.addCategories(allCategories);
-    await newProduct.setBrand(findBrand);
-    let findProvider = await Proveedores.findOne({
-      where: { proveedor },
-    });
+      await fs.unlink(req.files.img.tempFilePath);
 
-    await newProduct.setProveedore(findProvider);
+      let allCategories = await Categories.findAll({
+        where: { name: categories },
+      });
+      const findBrand = await Brands.findOne({ where: { brand } });
 
-    return res
-      .status(200)
-      .json({ message: "product added successfully", newProduct });
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ message: error });
+      await newProduct.addCategories(allCategories);
+      await newProduct.setBrand(findBrand);
+      let findProvider = await Proveedores.findOne({
+        where: { provider },
+      });
+
+      await newProduct.setProveedore(findProvider);
+
+      return res
+        .status(200)
+        .json({ message: "product added successfully", newProduct });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: error });
+    }
+  } else {
+    try {
+      let newProduct = await Products.create({
+        name,
+        description,
+        discount,
+        typeProduct,
+        price,
+        rating,
+      });
+
+      let allCategories = await Categories.findAll({
+        where: { name: categories },
+      });
+      const findBrand = await Brands.findOne({ where: { brand } });
+
+      await newProduct.addCategories(allCategories);
+      await newProduct.setBrand(findBrand);
+      let findProvider = await Proveedores.findOne({
+        where: { provider },
+      });
+
+      await newProduct.setProveedore(findProvider);
+
+      return res
+        .status(200)
+        .json({ message: "product added successfully", newProduct });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: error });
+    }
   }
 };
 
@@ -173,37 +210,36 @@ async function deleteProducts(req, res) {
 
 async function updateProducts(req, res) {
   let { id } = req.params;
-  let {
-    status,
-    name,
-    description,
-    img,
-    serieProducto,
-    price,
-    descuento,
-    typeProduct,
-    marca,
-    rating,
-  } = req.body;
+  let { name, description, discount, typeProduct, price, rating } = req.body;
 
-  try {
-    let findProduct = await Products.findByPk(id);
+  if (req.files?.img) {
+    try {
+      let findProduct = await Products.findByPk(id);
 
-    let update = await findProduct.update({
-      status: status,
-      name: name,
-      description: description,
-      img: img,
-      serieProducto: serieProducto,
-      price: price,
-      descuento: descuento,
-      typeProduct: typeProduct,
-      marca: marca,
-      rating: rating,
-    });
+      const imgUpdate = await updateProductImage(
+        req.files.img.tempFilePath,
+        findProduct.imgId
+      );
 
-    res.status(201).json({ message: "Product Updated", update });
-  } catch (error) {}
+      let update = await findProduct.update({
+        name: name,
+        img: imgUpdate.secure_url,
+        imgId: imgUpdate.public_id,
+        description: description,
+        price: price,
+        discount: discount,
+        typeProduct: typeProduct,
+        rating: rating,
+      });
+
+      await fs.unlink(req.files.img.tempFilePath);
+
+      res.status(201).json({ message: "Product Updated", update });
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
+  } else {
+  }
 }
 
 async function pageCurrent(req, res) {
