@@ -45,7 +45,7 @@ const {
   Roles,
   Users,
   Proveedores,
-  Ordenes,
+  Orders,
   Notifications,
   Cupones,
   Series,
@@ -94,8 +94,8 @@ Cupones.belongsTo(Users, { foreignKey: "userId" });
 Proveedores.hasMany(Products, { foreignKey: "proveedorId" });
 Products.belongsTo(Proveedores, { foreignKey: "proveedorId" });
 
-Facturas.hasMany(Ordenes, { foreignKey: "facturaId" });
-Ordenes.belongsTo(Facturas, { foreignKey: "facturaId" });
+Facturas.hasMany(Orders, { foreignKey: "facturaId" });
+Orders.belongsTo(Facturas, { foreignKey: "facturaId" });
 
 Products.hasMany(Series, { foreignKey: "productId" });
 Series.belongsTo(Products, { foreignKey: "productId" });

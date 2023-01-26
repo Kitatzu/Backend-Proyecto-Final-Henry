@@ -1,14 +1,14 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  sequelize.define("ordenes", {
+  sequelize.define("orders", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
     },
-    orderNumber: {
+    purchaseId: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
@@ -18,5 +18,6 @@ module.exports = (sequelize) => {
       allowNull: false,
       defaultValue: "CREATE",
     },
+    invoiceNumber: DataTypes.STRING,
   });
 };
