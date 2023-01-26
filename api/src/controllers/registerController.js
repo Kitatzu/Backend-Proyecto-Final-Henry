@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt"); //hash
 const fs = require("fs-extra");
 const { uploadAvatarImage } = require("../middlewares/cloudinary.js");
 
+
 async function register(req, res) {
   let {
     firstName,
