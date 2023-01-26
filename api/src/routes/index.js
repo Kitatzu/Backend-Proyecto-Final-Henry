@@ -11,8 +11,10 @@ const loginRoutes = require("./loginRoutes");
 const usersRoutes = require("./usersRoutes");
 const seriesRoute = require("./seriesRoute");
 const brandsRoutes = require("./brandsRoutes");
+const verificationRoutes=require("./verificationRoutes")
 const cartRoutes = require("./cartRoutes");
 const paymentRoutes = require("./paymentRoutes");
+
 
 router.use("/categories", categoriesRoutes);
 router.use("/products", ProductsRoutes);
@@ -25,7 +27,9 @@ router.use("/register", registerRoutes);
 router.use("/login", loginRoutes);
 router.use("/brands", brandsRoutes);
 router.use("/users", usersRoutes);
+router.use("/verification",verificationRoutes);
 router.use("/cart", cartRoutes);
 router.use("/payment", paymentRoutes);
+
 
 module.exports = router;
