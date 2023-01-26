@@ -21,7 +21,7 @@ async function getProducts(req, res) {
             },
             {
               model: Proveedores,
-              attributes: ["proveedor"],
+              attributes: ["provider"],
             },
             {
               model: Brands,
@@ -59,7 +59,7 @@ async function getProducts(req, res) {
             },
             {
               model: Proveedores,
-              attributes: ["proveedor"],
+              attributes: ["provider"],
             },
             {
               model: Brands,
@@ -96,7 +96,7 @@ async function productsId(req, res) {
         },
         {
           model: Proveedores,
-          attributes: ["proveedor"],
+          attributes: ["provider"],
         },
         {
           model: Brands,
@@ -119,9 +119,9 @@ const postProducts = async (req, res) => {
     name,
     description,
     categories,
-    descuento,
+    discount,
     typeProduct,
-    proveedor,
+    provider,
     price,
     rating,
     brand,
@@ -135,7 +135,7 @@ const postProducts = async (req, res) => {
         description,
         img: result.secure_url,
         imgId: result.public_id,
-        descuento,
+        discount,
         typeProduct,
         price,
         rating,
@@ -151,7 +151,7 @@ const postProducts = async (req, res) => {
       await newProduct.addCategories(allCategories);
       await newProduct.setBrand(findBrand);
       let findProvider = await Proveedores.findOne({
-        where: { proveedor },
+        where: { provider },
       });
 
       await newProduct.setProveedore(findProvider);
@@ -168,7 +168,7 @@ const postProducts = async (req, res) => {
       let newProduct = await Products.create({
         name,
         description,
-        descuento,
+        discount,
         typeProduct,
         price,
         rating,
@@ -182,7 +182,7 @@ const postProducts = async (req, res) => {
       await newProduct.addCategories(allCategories);
       await newProduct.setBrand(findBrand);
       let findProvider = await Proveedores.findOne({
-        where: { proveedor },
+        where: { provider },
       });
 
       await newProduct.setProveedore(findProvider);
@@ -210,7 +210,7 @@ async function deleteProducts(req, res) {
 
 async function updateProducts(req, res) {
   let { id } = req.params;
-  let { name, description, descuento, typeProduct, price, rating } = req.body;
+  let { name, description, discount, typeProduct, price, rating } = req.body;
 
   if (req.files?.img) {
     try {
@@ -227,7 +227,7 @@ async function updateProducts(req, res) {
         imgId: imgUpdate.public_id,
         description: description,
         price: price,
-        descuento: descuento,
+        discount: discount,
         typeProduct: typeProduct,
         rating: rating,
       });

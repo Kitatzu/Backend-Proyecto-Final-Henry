@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      descuento: {
+      discount: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
