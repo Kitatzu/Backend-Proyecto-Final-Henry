@@ -46,22 +46,22 @@ async function createProviders() {
 
     const providers = await Promise.all([
       await Proveedores.create({
-        proveedor: "Gygabyte",
+        provider: "Gygabyte",
         phone: "1",
         email: "gygabite@gmail.com",
       }),
       await Proveedores.create({
-        proveedor: "Adata",
+        provider: "Adata",
         phone: "2",
         email: "adata@gmail.com",
       }),
       await Proveedores.create({
-        proveedor: "Nvidia",
+        provider: "Nvidia",
         phone: "3",
         email: "nvidia@gmail.com",
       }),
       await Proveedores.create({
-        proveedor: "Intel",
+        provider: "Intel",
         phone: "4",
         email: "intel@gmail.com",
       }),
