@@ -4,11 +4,12 @@ const bcrypt = require("bcrypt"); //hash
 const fs = require("fs-extra");
 const { uploadAvatarImage } = require("../middlewares/cloudinary.js");
 
+
 async function register(req, res) {
   let {
     firstName,
     lastName,
-    fechaNacimiento,
+    birthday,
     userName,
     email,
     password,
@@ -44,7 +45,7 @@ async function register(req, res) {
             avatarId: avatarImg.public_id,
             firstName: firstName,
             lastName: lastName,
-            fechaNacimiento: fechaNacimiento,
+            birthday: birthday,
             userName: userName,
             email: email,
             password: await bcrypt.hash(password, 10),
@@ -79,7 +80,7 @@ async function register(req, res) {
             avatarId: avatarImg.public_id,
             firstName: firstName,
             lastName: lastName,
-            fechaNacimiento: fechaNacimiento,
+            birthday: birthday,
             userName: userName,
             email: email,
             password: await bcrypt.hash(password, 10),
@@ -121,7 +122,7 @@ async function register(req, res) {
         let newUser = await Users.create({
           firstName: firstName,
           lastName: lastName,
-          fechaNacimiento: fechaNacimiento,
+          birthday: birthday,
           userName: userName,
           email: email,
           password: await bcrypt.hash(password, 10),
@@ -152,7 +153,7 @@ async function register(req, res) {
         let newUser = await Users.create({
           firstName: firstName,
           lastName: lastName,
-          fechaNacimiento: fechaNacimiento,
+          birthday: birthday,
           userName: userName,
           email: email,
           password: await bcrypt.hash(password, 10),

@@ -2,6 +2,7 @@ const { Users, Roles } = require("../db.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+
 async function login(req, res) {
   let { email, password } = req.body;
 
