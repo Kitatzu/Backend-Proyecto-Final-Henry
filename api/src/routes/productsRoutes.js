@@ -1,9 +1,11 @@
 const { Router } = require("express");
 const {
   getProducts,
+  getStatusCero,
   postProducts,
   productsId,
   deleteProducts,
+  restoreProducts,
   updateProducts,
   pageCurrent,
   sortProducts,
@@ -13,6 +15,7 @@ const router = Router();
 
 router.get("/", getProducts);
 router.get("/:id", productsId);
+router.get("/status", getStatusCero);
 router.post(
   "/",
   fileupload({
@@ -22,6 +25,7 @@ router.post(
   postProducts
 );
 router.delete("/:id", deleteProducts);
+router.put("/restore/:id", restoreProducts);
 router.put(
   "/:id",
   fileupload({
