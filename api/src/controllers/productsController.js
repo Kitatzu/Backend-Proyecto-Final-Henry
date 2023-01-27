@@ -84,6 +84,35 @@ async function getProducts(req, res) {
   }
 }
 
+async function getStatusCero(req, res) {
+  try {
+    const allProducts = await Products({
+      where: { status: 0 },
+      include: [
+        {
+          model: Categories,
+          attributes: ["name"],
+        },
+        {
+          model: Proveedores,
+          attributes: ["provider"],
+        },
+        {
+          model: Brands,
+          attributes: ["brand"],
+        },
+        {
+          model: Series,
+          attributes: ["serie"],
+        },
+      ],
+    });
+    res.status(200).json(allProducts);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+}
+
 async function productsId(req, res) {
   const { id } = req.params;
 
@@ -201,10 +230,23 @@ async function deleteProducts(req, res) {
   let { id } = req.params;
 
   try {
-    const product = await Products.destroy({ where: { id: id } });
-    res.status(200).json({ message: "Product deleted", product });
+    let product = await Products.findOne({ where: { id: id } });
+    const statusCero = await product.update({ status: 0 });
+    res.status(200).json({ message: "Product deleted", statusCero });
   } catch (error) {
     res.status(400).json({ message: error });
+  }
+}
+
+async function restoreProducts(req, res) {
+  let { id } = req.params;
+
+  try {
+    let product = await Products.findByPk(id);
+    const statusUno = await product.update({ status: 1 });
+    return res.status(200).json({ message: "Restore Product", statusUno });
+  } catch (error) {
+    return res.status(400).json({ message: error });
   }
 }
 
@@ -308,9 +350,11 @@ async function sortProducts(req, res) {
 module.exports = {
   postProducts,
   getProducts,
+  getStatusCero,
   productsId,
   updateProducts,
   deleteProducts,
+  restoreProducts,
   pageCurrent,
   sortProducts,
 };
