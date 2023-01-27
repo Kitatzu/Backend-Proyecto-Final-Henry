@@ -13,6 +13,7 @@ const seriesRoute = require("./seriesRoute");
 const brandsRoutes = require("./brandsRoutes");
 const cartRoutes = require("./cartRoutes");
 const paymentRoutes = require("./paymentRoutes");
+const notificationRoute = require("./notificationRoute");
 
 router.use("/categories", categoriesRoutes);
 router.use("/products", ProductsRoutes);
@@ -27,5 +28,9 @@ router.use("/brands", brandsRoutes);
 router.use("/users", usersRoutes);
 router.use("/cart", cartRoutes);
 router.use("/payment", paymentRoutes);
+
+//TODO: NOTIFICATIONS
+router.use("/notification", notificationRoute);
+//TODO: NOTIFICATIONS
 
 module.exports = router;
