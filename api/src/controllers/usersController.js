@@ -63,7 +63,6 @@ async function deleteUser(req, res) {
   }
 }
 
-
 async function restoreUser(req, res) {
   let { id } = req.params;
   try {
@@ -74,7 +73,6 @@ async function restoreUser(req, res) {
     res.status(400).json({ message: error });
   }
 }
-
 
 async function updateUser(req, res) {
   let { id } = req.params;
@@ -148,13 +146,10 @@ async function updateUser(req, res) {
   }
 }
 
-
 module.exports = {
   allUsers,
   statusCero,
   updateUser,
   deleteUser,
   restoreUser,
-  boxSend,
 };
-
