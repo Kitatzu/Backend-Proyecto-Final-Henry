@@ -52,32 +52,6 @@ async function statusCero(req, res) {
   }
 }
 
-
-async function boxSend(req, res) {
-  let { correo } = req.body;
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "valcoellar@gmail.com",
-      pass: "rnrlnllvfcbjcvsf",
-    },
-  });
-
-
-  // messages ----------------------
-
-  let accion = "exito";
-  if (accion == "exito") {
-    let info = await transporter.sendMail({
-      from: '"Boxtech" <account@boxtech.com>',
-      to: correo, // receivers
-      subject: "Boxtech", // Subject line
-      text: "Thank you for your purchase!!", // plain text body
-      html: "<b>Thank you for your purchase!!</b>", // html body
-    });
-  }
-}
-
 async function deleteUser(req, res) {
   let { id } = req.params;
   try {
@@ -88,6 +62,7 @@ async function deleteUser(req, res) {
     res.status(400).json({ message: error });
   }
 }
+
 
 async function restoreUser(req, res) {
   let { id } = req.params;
