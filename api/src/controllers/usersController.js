@@ -9,7 +9,7 @@ async function allUsers(req, res) {
   if (userName) {
     try {
       let findUser = await Users.findAll({
-        where: { userName },
+        where: { userName, status: 1 },
         include: {
           model: Roles,
           attributes: ["rol"],
@@ -25,6 +25,7 @@ async function allUsers(req, res) {
   } else {
     try {
       let allUsers = await Users.findAll({
+        where: { status: 1 },
         include: {
           model: Roles,
           attributes: ["rol"],
@@ -38,6 +39,20 @@ async function allUsers(req, res) {
   }
 }
 
+async function statusCero(req, res) {
+  try {
+    let allUsers = await Users.findAll({
+      where: { status: 0 },
+      include: { model: Roles, attributes: ["rol"] },
+    });
+
+    res.status(200).json(allUsers);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+}
+
+
 async function boxSend(req, res) {
   let { correo } = req.body;
   let transporter = nodemailer.createTransport({
@@ -47,6 +62,7 @@ async function boxSend(req, res) {
       pass: "rnrlnllvfcbjcvsf",
     },
   });
+
 
   // messages ----------------------
 
@@ -61,6 +77,29 @@ async function boxSend(req, res) {
     });
   }
 }
+
+async function deleteUser(req, res) {
+  let { id } = req.params;
+  try {
+    let user = await Users.findByPk(id);
+    const del = await user.update({ status: 0 });
+    res.status(200).json({ message: "Deleted", del });
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+}
+
+async function restoreUser(req, res) {
+  let { id } = req.params;
+  try {
+    let findUser = await Users.findByPk(id);
+    const restore = await findUser.update({ status: 1 });
+    res.status(200).json({ message: "Restored!", restore });
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+}
+
 
 async function updateUser(req, res) {
   let { id } = req.params;
@@ -135,5 +174,12 @@ async function updateUser(req, res) {
 }
 
 
-module.exports = { allUsers, updateUser, boxSend };
+module.exports = {
+  allUsers,
+  statusCero,
+  updateUser,
+  deleteUser,
+  restoreUser,
+  boxSend,
+};
 
