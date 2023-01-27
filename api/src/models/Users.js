@@ -59,6 +59,10 @@ module.exports = (sequelize) => {
       city: {
         type: DataTypes.STRING,
       },
+      verifCode:{
+        type:DataTypes.INTEGER,
+        allowNull:false,
+        },
     },
     {
       timestamp: true,
