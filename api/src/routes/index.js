@@ -11,7 +11,11 @@ const loginRoutes = require("./loginRoutes");
 const usersRoutes = require("./usersRoutes");
 const seriesRoute = require("./seriesRoute");
 const brandsRoutes = require("./brandsRoutes");
+
 const cart = require("./cart");
+
+const verificationRoutes = require("./verificationRoutes");
+
 const paymentRoutes = require("./paymentRoutes");
 const notificationRoute = require("./notificationRoute");
 
@@ -26,7 +30,11 @@ router.use("/register", registerRoutes);
 router.use("/login", loginRoutes);
 router.use("/brands", brandsRoutes);
 router.use("/users", usersRoutes);
+
 router.use("/cart", cart);
+
+router.use("/verification", verificationRoutes);
+
 router.use("/payment", paymentRoutes);
 
 //TODO: NOTIFICATIONS
