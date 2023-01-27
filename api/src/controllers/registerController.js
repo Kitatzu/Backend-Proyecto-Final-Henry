@@ -176,7 +176,7 @@ async function register(req, res) {
         res.status(200).json({
           message: "Succefully registered",
           ...newUser.dataValues,
-          token,
+          token,rol: findRole.rol
         });
       } else {
         let userRole = await Roles.findOne({ where: { rol: "User" } });
@@ -208,11 +208,12 @@ async function register(req, res) {
         res.status(200).json({
           message: "Succefully registered",
           ...newUser.dataValues,
-          token,
+          token, 
         });
       }
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: error });
   }
 }

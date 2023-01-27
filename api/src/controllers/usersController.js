@@ -52,6 +52,7 @@ async function statusCero(req, res) {
   }
 }
 
+
 async function boxSend(req, res) {
   let { correo } = req.body;
   let transporter = nodemailer.createTransport({
@@ -61,6 +62,7 @@ async function boxSend(req, res) {
       pass: "rnrlnllvfcbjcvsf",
     },
   });
+
 
   // messages ----------------------
 
@@ -97,6 +99,7 @@ async function restoreUser(req, res) {
     res.status(400).json({ message: error });
   }
 }
+
 
 async function updateUser(req, res) {
   let { id } = req.params;
@@ -170,6 +173,7 @@ async function updateUser(req, res) {
   }
 }
 
+
 module.exports = {
   allUsers,
   statusCero,
@@ -178,3 +182,4 @@ module.exports = {
   restoreUser,
   boxSend,
 };
+
