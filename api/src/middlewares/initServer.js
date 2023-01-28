@@ -116,6 +116,14 @@ async function createBrands() {
         brand: "Asrock",
         img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674933114/Brand/Asrock.png",
       }),
+      await Brands.create({
+        brand: "Scorpion",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674934889/Brand/Scorpion.jpg",
+      }),
+      await Brands.create({
+        brand: "Arktek",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674934877/Brand/Artek.jpg",
+      }),
     ]);
   } catch (e) {
     console.error(error);
