@@ -76,18 +76,46 @@ async function createBrands() {
     const allBrands = await Brands.findAll();
     if (allBrands.length) return;
     const brands = await Promise.all([
-      await Brands.create({ brand: "Intel" }),
-      await Brands.create({ brand: "Nvidia" }),
-      await Brands.create({ brand: "Amd" }),
-      await Brands.create({ brand: "Adata" }),
-      await Brands.create({ brand: "Toshiba" }),
-      await Brands.create({ brand: "Samsung" }),
-      await Brands.create({ brand: "Arktek" }),
-      await Brands.create({ brand: "Gigabyte" }),
-      await Brands.create({ brand: "Asus" }),
-      await Brands.create({ brand: "MSI" }),
-      await Brands.create({ brand: "Asrock" }),
-      await Brands.create({ brand: "Scorpion" }),
+      await Brands.create({
+        brand: "Intel",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674932741/Brand/Intel.png",
+      }),
+      await Brands.create({
+        brand: "Nvidia",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674932784/Brand/Nvidia.png",
+      }),
+      await Brands.create({
+        brand: "Amd",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674932848/Brand/Amd.jpg",
+      }),
+      await Brands.create({
+        brand: "Adata",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674932866/Brand/Adata.png",
+      }),
+      await Brands.create({
+        brand: "Toshiba",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674932878/Brand/Toshiba.png",
+      }),
+      await Brands.create({
+        brand: "Samsung",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674932993/Brand/Samsung.png",
+      }),
+      await Brands.create({
+        brand: "Gigabyte",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674933026/Brand/Gigabyte.png",
+      }),
+      await Brands.create({
+        brand: "Asus",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674933087/Brand/Asus.png",
+      }),
+      await Brands.create({
+        brand: "MSI",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674933102/Brand/Msi.png",
+      }),
+      await Brands.create({
+        brand: "Asrock",
+        img: "https://res.cloudinary.com/debfwgutb/image/upload/v1674933114/Brand/Asrock.png",
+      }),
     ]);
   } catch (e) {
     console.error(error);
