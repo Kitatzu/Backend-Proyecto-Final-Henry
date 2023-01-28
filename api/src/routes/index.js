@@ -11,7 +11,7 @@ const loginRoutes = require("./loginRoutes");
 const usersRoutes = require("./usersRoutes");
 const seriesRoute = require("./seriesRoute");
 const brandsRoutes = require("./brandsRoutes");
-
+const factura = require("./factura");
 const cart = require("./cart");
 
 const verificationRoutes = require("./verificationRoutes");
@@ -30,13 +30,10 @@ router.use("/register", registerRoutes);
 router.use("/login", loginRoutes);
 router.use("/brands", brandsRoutes);
 router.use("/users", usersRoutes);
-
+router.use("/factura", factura);
 router.use("/cart", cart);
-
 router.use("/verification", verificationRoutes);
-
 router.use("/payment", paymentRoutes);
-
 //TODO: NOTIFICATIONS
 router.use("/notification", notificationRoute);
 //TODO: NOTIFICATIONS
