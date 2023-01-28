@@ -4,22 +4,25 @@ const { updateAvatarImage } = require("../middlewares/cloudinary.js");
 const fs = require("fs-extra");
 
 async function allUsers(req, res) {
-  let { userName } = req.query;
-
-  if (userName) {
+  let { email } = req.query;
+  console.log(email);
+  if (email) {
     try {
       let findUser = await Users.findAll({
-        where: { userName, status: 1 },
+
+        where: { email },
+
         include: {
           model: Roles,
           attributes: ["rol"],
         },
       });
-
+      console.log(findUser);
       findUser
-        ? res.status(201).json({ ...findUser[0].dataValue })
+        ? res.status(201).json({ ...findUser[0].dataValues })
         : res.status(400).json("user not found");
     } catch (error) {
+      console.log(error);
       res.status(400).json({ message: error });
     }
   } else {
@@ -146,6 +149,9 @@ async function updateUser(req, res) {
   }
 }
 
+
+
+
 module.exports = {
   allUsers,
   statusCero,
@@ -153,3 +159,4 @@ module.exports = {
   deleteUser,
   restoreUser,
 };
+

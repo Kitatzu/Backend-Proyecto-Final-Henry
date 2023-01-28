@@ -1,5 +1,5 @@
 const sequelize = require("../db");
-const { Cart, ProductsInCart, Users, Products } = sequelize;
+const { Carts, ProductsInCart, Users, Products } = sequelize;
 const { Op } = require("sequelize");
 
 const getCart = async (req, res) => {
@@ -11,18 +11,18 @@ const getCart = async (req, res) => {
         .then(async (user) => {
           console.log(user);
           user
-            ? await Cart.findOne({
+            ? await Carts.findOne({
                 where: {
                   [Op.and]: [
                     { id: user.cartId },
                     { status: { [Op.eq]: "pending" } },
                   ],
                 },
-              }).then(async (cart) => {
-                console.log(cart);
+              }).then(async (Carts) => {
+                console.log(Carts);
                 await ProductsInCart.findAll({
                   where: {
-                    cartId: cart.id,
+                    cartId: Carts.id,
                   },
                   include: Products,
                 })
@@ -30,7 +30,7 @@ const getCart = async (req, res) => {
                     console.log(products);
                     return res.status(200).json({
                       status: "success",
-                      cart: { ...cart.dataValues, products },
+                      cart: { ...Carts.dataValues, products },
                     });
                   })
                   .catch((e) => {
@@ -73,13 +73,13 @@ const createProductsInCart = async (quantity, productId, cartId) => {
         quantity,
         productId,
       });
-      const cart = await Cart.findByPk(cartId);
+      const cart = await Carts.findByPk(cartId);
       const sumatotal = parseFloat(cart.totalPrice);
       const product = await Products.findByPk(productId);
 
       console.log(sumatotal);
       await cart.addProductsInCarts(ProductsInCart);
-      const priceCart = await Cart.update(
+      const priceCart = await Carts.update(
         {
           totalPrice:
             sumatotal + parseFloat(product.price) * parseInt(quantity),
@@ -104,7 +104,7 @@ const updateCart = async (req, res) => {
     try {
       const user = await Users.findByPk(userId);
       if (user) {
-        const cart = await Cart.findOne({
+        const cart = await Carts.findOne({
           where: {
             [Op.and]: [{ id: user.cartId }, { status: { [Op.eq]: "pending" } }],
           },
@@ -176,7 +176,7 @@ const deleteProduct = async (req, res) => {
   const { productId, cartId } = req.params;
   console.log(productId, cartId, req.params);
   try {
-    const cart = await Cart.findByPk(cartId);
+    const cart = await Carts.findByPk(cartId);
     const product = await ProductsInCart.findOne({
       where: {
         [Op.and]: [
