@@ -21,6 +21,7 @@ router.post("/:productId", async (req, res) => {
       productId,
       user.cartId
     );
+    console.log(productsInCart);
     productsInCart
       ? res
           .status(200)

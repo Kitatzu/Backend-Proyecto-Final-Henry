@@ -69,7 +69,7 @@ const createProductsInCart = async (quantity, productId, cartId) => {
   console.log(findProduct);
   if (!findProduct) {
     try {
-      const ProductsInCart = await ProductsInCart.create({
+      const productsInCart = await ProductsInCart.create({
         quantity,
         productId,
       });
@@ -78,7 +78,7 @@ const createProductsInCart = async (quantity, productId, cartId) => {
       const product = await Products.findByPk(productId);
 
       console.log(sumatotal);
-      await cart.addProductsInCarts(ProductsInCart);
+      await cart.addProductsInCarts(productsInCart);
       const priceCart = await Carts.update(
         {
           totalPrice:
