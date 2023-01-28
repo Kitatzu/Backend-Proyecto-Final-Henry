@@ -269,6 +269,24 @@ async function pageCurrent(req, res) {
     try {
       let Productos = await Products.findAll({
         where: { status: { [Op.eq]: 1 } },
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+          {
+            model: Proveedores,
+            attributes: ["provider"],
+          },
+          {
+            model: Brands,
+            attributes: ["brand"],
+          },
+          {
+            model: Series,
+            attributes: ["serie"],
+          },
+        ],
       }); // bajamos los pruductos de Products a Productos con sequelize
       const ProductosArray = Productos; // convertimos Productos(objeto) en array para poder aplicar slice
 
