@@ -23,15 +23,42 @@ async function createCategories() {
     if (allCategories.length) return;
 
     const categories = await Promise.all([
-      await Categories.create({ name: "Placa de video" }),
-      await Categories.create({ name: "Procesador" }),
-      await Categories.create({ name: "Ram" }),
-      await Categories.create({ name: "Computadora" }),
-      await Categories.create({ name: "Motherboard" }),
-      await Categories.create({ name: "Almacenamiento" }),
-      await Categories.create({ name: "Periferico" }),
-      await Categories.create({ name: "Monitor" }),
-      await Categories.create({ name: "Fuente de alimentacion" }),
+      await Categories.create({
+        name: "Placa de video",
+        img: "https://dlcdnwebimgs.asus.com/gain/131c99bd-c072-478b-91c0-497178564bcb/w800",
+      }),
+      await Categories.create({
+        name: "Procesador",
+        img: "https://keagamerstore.com/wp-content/uploads/2023/01/1-3-247x247.png",
+      }),
+      await Categories.create({
+        name: "Ram",
+        img: "https://www.tecnosmart.com.ec/wp-content/uploads/2021/08/Kit-Ram-CORSAIR-Dominator-Platinum-8GB-2x4GB-DDR4-4000MHz_Memoria-Ram_3538_1.png",
+      }),
+      await Categories.create({
+        name: "Computadora",
+        img: "https://portal-center.com/wp-content/uploads/2020/09/PC-GAMER.png",
+      }),
+      await Categories.create({
+        name: "Motherboard",
+        img: "https://i0.wp.com/nomadaware.com.ec/wp-content/uploads/2021/02/NomadaWare_motherboard_asus_tuf_b460m_plus_wifi-3.png?fit=1000%2C1000&ssl=1",
+      }),
+      await Categories.create({
+        name: "Almacenamiento",
+        img: "https://novicompu.vtexassets.com/arquivos/ids/161617/1PWES1232.png?v=637662160021630000",
+      }),
+      await Categories.create({
+        name: "Periferico",
+        img: "https://tiaecuador.vtexassets.com/arquivos/ids/206333-800-auto?v=638025866682200000&width=800&height=auto&aspect=true",
+      }),
+      await Categories.create({
+        name: "Monitor",
+        img: "https://davidpc.net/wp-content/uploads/2022/08/4-4-1.png",
+      }),
+      await Categories.create({
+        name: "Fuente de alimentacion",
+        img: "https://sites.google.com/site/mmelasespenetas/_/rsrc/1490266685908/contenidos-mme/fuentes-de-alimentacion/fuente_alimentacion_modular.png",
+      }),
     ]);
   } catch (error) {
     console.log(error);
