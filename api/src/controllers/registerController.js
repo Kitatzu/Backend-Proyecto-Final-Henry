@@ -3,26 +3,7 @@ const jwt = require("jsonwebtoken"); //token
 const bcrypt = require("bcrypt"); //hash
 const fs = require("fs-extra");
 const { uploadAvatarImage } = require("../middlewares/cloudinary.js");
-const nodemailer=require("nodemailer")
-
-async function verification (correo,code) {
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "valcoellar@gmail.com", 
-      pass: "rnrlnllvfcbjcvsf", 
-    },
-    });  
-  
-    let info = await transporter.sendMail({
-      from: '"Boxtech" <account@boxtech.com>', 
-      to: correo, // receivers
-      subject: "Boxtech", // Subject line
-      text: "verification code!!!", // plain text body
-      html: `<b>your verificarion code is: ${code}</b>`, // html body
-    });
-  
-  };
+const { transporter } = require("../middlewares/nodeMailer");
 
 async function register(req, res) {
   let {
@@ -40,8 +21,17 @@ async function register(req, res) {
   function getRandomInt(min, max) {
     return Math.round(Math.random() * (max - min) + min);
   }
-  let code=getRandomInt(100000,999999);
-  console.log(code);
+  let code = getRandomInt(100000, 999999);
+
+  async function mail(email, code) {
+    let info = await transporter.sendMail({
+      from: '"Boxtech" <account@boxtech.com>',
+      to: email, // receivers
+      subject: "Boxtech", // Subject line
+      text: "verification code!!!", // plain text body
+      html: `<b>your verificarion code is: ${code}</b>`, // html body
+    });
+  }
 
   try {
     let findUserName = await Users.findOne({ where: { userName } });
@@ -77,7 +67,7 @@ async function register(req, res) {
             country,
             phone,
             cartId: newCart.id,
-            verifCode:code,
+            verifCode: code,
           });
 
           await fs.unlink(req.files.avatar.tempFilePath);
@@ -93,7 +83,8 @@ async function register(req, res) {
             },
             process.env.TOKEN
           );
-          verification(newUser.email,newUser.verifCode);
+
+          mail(newUser.email, newUser.verifCode);
 
           res.status(200).json({
             message: "Succefully registered",
@@ -114,7 +105,7 @@ async function register(req, res) {
             country,
             phone,
             cartId: newCart.id,
-            verifCode:code,
+            verifCode: code,
           });
 
           await fs.unlink(req.files.avatar.tempFilePath);
@@ -130,7 +121,8 @@ async function register(req, res) {
             },
             process.env.TOKEN
           );
-          verification(newUser.email,newUser.verifCode);
+
+          mail(newUser.email, newUser.verifCode);
           res.status(200).json({
             message: "Succefully registered",
             ...newUser.dataValues,
@@ -158,7 +150,7 @@ async function register(req, res) {
           country,
           phone,
           cartId: newCart.id,
-          verifCode:code,
+          verifCode: code,
         });
 
         await newUser.setRole(findRole);
@@ -172,11 +164,14 @@ async function register(req, res) {
           },
           process.env.TOKEN
         );
-        verification(newUser.email,newUser.verifCode);
+
+        mail(newUser.email, newUser.verifCode);
+
         res.status(200).json({
           message: "Succefully registered",
           ...newUser.dataValues,
           token,
+          rol: findRole.rol,
         });
       } else {
         let userRole = await Roles.findOne({ where: { rol: "User" } });
@@ -190,7 +185,7 @@ async function register(req, res) {
           country,
           phone,
           cartId: newCart.id,
-          verifCode:code,
+          verifCode: code,
         });
 
         await newUser.setRole(userRole);
@@ -204,7 +199,9 @@ async function register(req, res) {
           },
           process.env.TOKEN
         );
-        verification(newUser.email,newUser.verifCode);
+
+        mail(newUser.email, newUser.verifCode);
+
         res.status(200).json({
           message: "Succefully registered",
           ...newUser.dataValues,
