@@ -1,4 +1,5 @@
 
+const { server } = require("./src/app.js");
 require("dotenv").config;
 const { PORT } = process.env;
 const server = require("./src/app.js");
@@ -9,12 +10,18 @@ const {
   createProviders,
   createBrands,
 } = require("./src/middlewares/initServer.js");
+//TODO: SOCKET
+const socket = require("./src/socket/socket.js");
+
+socket();
+
+//TODO: SOCKET
 
 server.listen(PORT, () => {
   console.log(`%s listening at ${PORT}`);
   try {
     conn
-      .sync()
+      .sync({force: true})
       .then((response) => {
         createRoles();
         createCategories();

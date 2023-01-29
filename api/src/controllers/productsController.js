@@ -1,5 +1,10 @@
 const { Op } = require("sequelize");
 const { Products, Categories, Proveedores, Brands, Series } = require("../db");
+const {
+  uploadProductImage,
+  updateProductImage,
+} = require("../middlewares/cloudinary.js");
+const fs = require("fs-extra");
 
 async function getProducts(req, res) {
   const name = req.query.name;
@@ -16,7 +21,7 @@ async function getProducts(req, res) {
             },
             {
               model: Proveedores,
-              attributes: ["proveedor"],
+              attributes: ["provider"],
             },
             {
               model: Brands,
@@ -54,7 +59,7 @@ async function getProducts(req, res) {
             },
             {
               model: Proveedores,
-              attributes: ["proveedor"],
+              attributes: ["provider"],
             },
             {
               model: Brands,
@@ -79,6 +84,35 @@ async function getProducts(req, res) {
   }
 }
 
+async function getStatusCero(req, res) {
+  try {
+    const allProducts = await Products({
+      where: { status: 0 },
+      include: [
+        {
+          model: Categories,
+          attributes: ["name"],
+        },
+        {
+          model: Proveedores,
+          attributes: ["provider"],
+        },
+        {
+          model: Brands,
+          attributes: ["brand"],
+        },
+        {
+          model: Series,
+          attributes: ["serie"],
+        },
+      ],
+    });
+    res.status(200).json(allProducts);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+}
+
 async function productsId(req, res) {
   const { id } = req.params;
 
@@ -91,7 +125,7 @@ async function productsId(req, res) {
         },
         {
           model: Proveedores,
-          attributes: ["proveedor"],
+          attributes: ["provider"],
         },
         {
           model: Brands,
@@ -111,52 +145,84 @@ async function productsId(req, res) {
 
 const postProducts = async (req, res) => {
   const {
-    status,
     name,
     description,
-    img,
     categories,
-    serieProducto,
-    price,
-    descuento,
+    discount,
     typeProduct,
-    proveedor,
+    provider,
+    price,
     rating,
     brand,
   } = req.body;
 
-  try {
-    let newProduct = await Products.create({
-      status,
-      name,
-      description,
-      img,
-      serieProducto,
-      price,
-      descuento,
-      typeProduct,
-      rating,
-    });
+  if (req.files?.img) {
+    try {
+      const result = await uploadProductImage(req.files.img.tempFilePath);
+      let newProduct = await Products.create({
+        name,
+        description,
+        img: result.secure_url,
+        imgId: result.public_id,
+        discount,
+        typeProduct,
+        price,
+        rating,
+      });
 
-    let allCategories = await Categories.findAll({
-      where: { name: categories },
-    });
-    const findBrand = await Brands.findOne({ where: { brand } });
-    console.log(findBrand);
-    await newProduct.addCategories(allCategories);
-    await newProduct.setBrand(findBrand);
-    let findProvider = await Proveedores.findOne({
-      where: { proveedor },
-    });
+      await fs.unlink(req.files.img.tempFilePath);
 
-    await newProduct.setProveedore(findProvider);
+      let allCategories = await Categories.findAll({
+        where: { name: categories },
+      });
+      const findBrand = await Brands.findOne({ where: { brand } });
 
-    return res
-      .status(200)
-      .json({ message: "product added successfully", newProduct });
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ message: error });
+      await newProduct.addCategories(allCategories);
+      await newProduct.setBrand(findBrand);
+      let findProvider = await Proveedores.findOne({
+        where: { provider },
+      });
+
+      await newProduct.setProveedore(findProvider);
+
+      return res
+        .status(200)
+        .json({ message: "product added successfully", newProduct });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: error });
+    }
+  } else {
+    try {
+      let newProduct = await Products.create({
+        name,
+        description,
+        discount,
+        typeProduct,
+        price,
+        rating,
+      });
+
+      let allCategories = await Categories.findAll({
+        where: { name: categories },
+      });
+      const findBrand = await Brands.findOne({ where: { brand } });
+
+      await newProduct.addCategories(allCategories);
+      await newProduct.setBrand(findBrand);
+      let findProvider = await Proveedores.findOne({
+        where: { provider },
+      });
+
+      await newProduct.setProveedore(findProvider);
+
+      return res
+        .status(200)
+        .json({ message: "product added successfully", newProduct });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: error });
+    }
   }
 };
 
@@ -164,46 +230,58 @@ async function deleteProducts(req, res) {
   let { id } = req.params;
 
   try {
-    const product = await Products.destroy({ where: { id: id } });
-    res.status(200).json({ message: "Product deleted", product });
+    let product = await Products.findOne({ where: { id: id } });
+    const statusCero = await product.update({ status: 0 });
+    res.status(200).json({ message: "Product deleted", statusCero });
   } catch (error) {
     res.status(400).json({ message: error });
   }
 }
 
-async function updateProducts(req, res) {
+async function restoreProducts(req, res) {
   let { id } = req.params;
-  let {
-    status,
-    name,
-    description,
-    img,
-    serieProducto,
-    price,
-    descuento,
-    typeProduct,
-    marca,
-    rating,
-  } = req.body;
 
   try {
-    let findProduct = await Products.findByPk(id);
+    let product = await Products.findByPk(id);
+    const statusUno = await product.update({ status: 1 });
+    return res.status(200).json({ message: "Restore Product", statusUno });
+  } catch (error) {
+    return res.status(400).json({ message: error });
+  }
+}
 
-    let update = await findProduct.update({
-      status: status,
-      name: name,
-      description: description,
-      img: img,
-      serieProducto: serieProducto,
-      price: price,
-      descuento: descuento,
-      typeProduct: typeProduct,
-      marca: marca,
-      rating: rating,
-    });
+async function updateProducts(req, res) {
+  let { id } = req.params;
+  let { name, description, discount, typeProduct, price, rating } = req.body;
 
-    res.status(201).json({ message: "Product Updated", update });
-  } catch (error) {}
+  if (req.files?.img) {
+    try {
+      let findProduct = await Products.findByPk(id);
+
+      const imgUpdate = await updateProductImage(
+        req.files.img.tempFilePath,
+        findProduct.imgId
+      );
+
+      let update = await findProduct.update({
+        name: name,
+        img: imgUpdate.secure_url,
+        imgId: imgUpdate.public_id,
+        description: description,
+        price: price,
+        discount: discount,
+        typeProduct: typeProduct,
+        rating: rating,
+      });
+
+      await fs.unlink(req.files.img.tempFilePath);
+
+      res.status(201).json({ message: "Product Updated", update });
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
+  } else {
+  }
 }
 
 async function pageCurrent(req, res) {
@@ -233,6 +311,24 @@ async function pageCurrent(req, res) {
     try {
       let Productos = await Products.findAll({
         where: { status: { [Op.eq]: 1 } },
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+          {
+            model: Proveedores,
+            attributes: ["provider"],
+          },
+          {
+            model: Brands,
+            attributes: ["brand"],
+          },
+          {
+            model: Series,
+            attributes: ["serie"],
+          },
+        ],
       }); // bajamos los pruductos de Products a Productos con sequelize
       const ProductosArray = Productos; // convertimos Productos(objeto) en array para poder aplicar slice
 
@@ -272,9 +368,11 @@ async function sortProducts(req, res) {
 module.exports = {
   postProducts,
   getProducts,
+  getStatusCero,
   productsId,
   updateProducts,
   deleteProducts,
+  restoreProducts,
   pageCurrent,
   sortProducts,
 };
