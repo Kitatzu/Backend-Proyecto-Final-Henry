@@ -7,8 +7,10 @@ const {
   restoreUser,
   updateUser,
 } = require("../controllers/usersController");
+const { changePassword } = require("../controllers/passwordController");
 const fileupload = require("express-fileupload");
 
+router.post("/password", changePassword);
 router.get("/", allUsers);
 router.get("/status", statusCero);
 router.delete("/:id", deleteUser);
