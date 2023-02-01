@@ -84,9 +84,9 @@ async function getProducts(req, res) {
   }
 }
 
-async function getStatusCero(req, res) {
+async function statusCero(req, res) {
   try {
-    const allProducts = await Products({
+    const allProducts = await Products.findAll({
       where: { status: 0 },
       include: [
         {
@@ -368,7 +368,7 @@ async function sortProducts(req, res) {
 module.exports = {
   postProducts,
   getProducts,
-  getStatusCero,
+  statusCero,
   productsId,
   updateProducts,
   deleteProducts,
