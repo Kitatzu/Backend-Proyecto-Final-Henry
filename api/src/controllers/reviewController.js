@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Reviews, Users, Products } = require("../db");
 
 const calculateRating = async (productId, userId) => {
@@ -11,6 +12,21 @@ const calculateRating = async (productId, userId) => {
     return suma / usuarios;
   } catch (e) {
     return e;
+  }
+};
+
+const validateRating = async (req, res) => {
+  const { productId, userId } = req.body;
+  try {
+    const findReview = await Reviews.findOne({
+      where: { [Op.and]: [{ productId }, { userId }] },
+    });
+    findReview
+      ? res.status(200).json(findReview)
+      : res.status(500).send("No existe reseña!");
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
   }
 };
 
@@ -37,4 +53,4 @@ const saveReview = async (req, res) => {
     res.status(500).send("Error");
   }
 };
-module.exports = { saveReview };
+module.exports = { saveReview, validateRating };

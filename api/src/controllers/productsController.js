@@ -155,7 +155,7 @@ const postProducts = async (req, res) => {
     rating,
     brand,
   } = req.body;
-
+  console.log(req.body);
   if (req.files?.img) {
     try {
       const result = await uploadProductImage(req.files.img.tempFilePath);
@@ -206,6 +206,7 @@ const postProducts = async (req, res) => {
       let allCategories = await Categories.findAll({
         where: { name: categories },
       });
+
       const findBrand = await Brands.findOne({ where: { brand } });
 
       await newProduct.addCategories(allCategories);
@@ -215,7 +216,15 @@ const postProducts = async (req, res) => {
       });
 
       await newProduct.setProveedore(findProvider);
+      //FIXME: ERROR NO SETEA CATEGORIES
 
+      console.log({
+        categories: allCategories,
+        brands: findBrand,
+        Proveedor: findProvider,
+      });
+
+      //FIXME: ERROR NO SETEA CATEGORIES
       return res
         .status(200)
         .json({ message: "product added successfully", newProduct });
