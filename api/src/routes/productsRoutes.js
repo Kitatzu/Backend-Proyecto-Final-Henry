@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const {
   getProducts,
-  getStatusCero,
+  statusCero,
   postProducts,
   productsId,
   deleteProducts,
@@ -14,8 +14,8 @@ const fileupload = require("express-fileupload");
 const router = Router();
 
 router.get("/", getProducts);
+router.get("/status", statusCero);
 router.get("/:id", productsId);
-router.get("/status", getStatusCero);
 router.post(
   "/",
   fileupload({
