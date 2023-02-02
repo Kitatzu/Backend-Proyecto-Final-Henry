@@ -5,7 +5,7 @@ const calculateRating = async (productId, userId) => {
   //TODO:RATING USUARIOS
   try {
     const usuarios = await Reviews.count({
-      where: { [Op.and]: [{ productId, userId }] },
+      where: { productId },
     });
     const suma = await Reviews.sum("rating", { where: { productId } });
     //TODO:CALCULATE
