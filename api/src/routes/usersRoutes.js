@@ -2,6 +2,7 @@ const { Router } = require("express");
 const router = Router();
 const {
   allUsers,
+  oneUser,
   statusCero,
   deleteUser,
   restoreUser,
@@ -13,6 +14,7 @@ const fileupload = require("express-fileupload");
 router.post("/password", changePassword);
 router.get("/", allUsers);
 router.get("/status", statusCero);
+router.get("/:id", oneUser);
 router.delete("/:id", deleteUser);
 router.put("/restore/:id", restoreUser);
 router.put(

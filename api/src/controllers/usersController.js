@@ -9,7 +9,6 @@ async function allUsers(req, res) {
   if (email) {
     try {
       let findUser = await Users.findAll({
-
         where: { email },
 
         include: {
@@ -39,6 +38,17 @@ async function allUsers(req, res) {
     } catch (error) {
       res.status(400).json({ message: error });
     }
+  }
+}
+
+async function oneUser(req, res) {
+  let { id } = req.params;
+  try {
+    let user = await Users.findByPk(id);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json(error);
   }
 }
 
@@ -149,14 +159,11 @@ async function updateUser(req, res) {
   }
 }
 
-
-
-
 module.exports = {
   allUsers,
+  oneUser,
   statusCero,
   updateUser,
   deleteUser,
   restoreUser,
 };
-
