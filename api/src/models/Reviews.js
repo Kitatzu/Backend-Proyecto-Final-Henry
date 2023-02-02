@@ -8,11 +8,11 @@ module.exports = (sequelize) => {
       primaryKey: true,
     },
     rating: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DOUBLE,
       allowNull: false,
       validate: {
-        min: 0,
-        max: 5,
+        min: 0.0,
+        max: 5.0,
       },
     },
     review: {

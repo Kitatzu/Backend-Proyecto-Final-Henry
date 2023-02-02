@@ -4,7 +4,9 @@ const { Reviews, Users, Products } = require("../db");
 const calculateRating = async (productId, userId) => {
   //TODO:RATING USUARIOS
   try {
-    const usuarios = await Reviews.count({ where: { productId } });
+    const usuarios = await Reviews.count({
+      where: { productId },
+    });
     const suma = await Reviews.sum("rating", { where: { productId } });
     //TODO:CALCULATE
     let result = suma / usuarios;
