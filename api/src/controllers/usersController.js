@@ -89,7 +89,7 @@ async function restoreUser(req, res) {
 
 async function updateUser(req, res) {
   let { id } = req.params;
-  const { userName, city, country, phone } = req.body;
+  const { email, city, country, phone } = req.body;
 
   if (req.files?.avatar) {
     try {
@@ -100,23 +100,23 @@ async function updateUser(req, res) {
         },
       });
 
-      let findUser = await Users.findOne({ where: { userName } });
+      let findUser = await Users.findOne({ where: { email } });
 
       const avatarUpdate = await updateAvatarImage(
         req.files.avatar.tempFilePath,
         user.avatarId
       );
 
-      if (user.userName === userName) {
-        return res.status(404).json(`the username ${userName} is r epeat`);
+      if (user.email === email) {
+        return res.status(404).json(`the email ${email} is repeat`);
       }
       if (findUser) {
-        return res.status(400).json(`the username ${userName} is registered`);
+        return res.status(400).json(`the email ${email} is registered`);
       } else {
         let userUpdate = await user.update({
           avatar: avatarUpdate.secure_url,
           avatarId: avatarUpdate.public_id,
-          userName: userName,
+          email: email,
           city: city,
           country: country,
           phone: phone,
@@ -138,23 +138,26 @@ async function updateUser(req, res) {
         },
       });
 
-      let findUser = await Users.findOne({ where: { userName } });
+      let findUser = await Users.findOne({ where: { email } });
 
-      if (user.userName === userName)
-        return res.status(404).json(`the username ${userName} is repeat`);
-      if (findUser)
-        return res.status(400).json(`the username ${userName} is registered`);
+      if (user.email === email) {
+        return res.status(404).json(`the email ${email} is repeat`);
+      }
 
-      let userUpdate = await user.update({
-        userName: userName,
-        city: city,
-        country: country,
-        phone: phone,
-      });
+      if (findUser) {
+        return res.status(400).json(`the email ${email} is registered`);
+      } else {
+        let userUpdate = await user.update({
+          email: email,
+          city: city,
+          country: country,
+          phone: phone,
+        });
 
-      res.status(200).json({ ...userUpdate.dataValues, newToken });
+        res.status(200).json({ ...userUpdate.dataValues });
+      }
     } catch (error) {
-      res.status(400).json({ error: error });
+      res.status(400).json(error);
     }
   }
 }
