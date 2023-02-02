@@ -7,6 +7,7 @@ const { transporter } = require("../middlewares/nodeMailer");
 
 async function register(req, res) {
   let {
+    avatar,
     firstName,
     lastName,
     birthday,
@@ -176,6 +177,7 @@ async function register(req, res) {
       } else {
         let userRole = await Roles.findOne({ where: { rol: "User" } });
         let newUser = await Users.create({
+          avatar,
           firstName: firstName,
           lastName: lastName,
           birthday: birthday,
