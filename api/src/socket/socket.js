@@ -11,6 +11,12 @@ const socket = () => {
       console.log(response);
       socket.broadcast.emit("notification", response);
     });
-  });
+    socket.on("message", (message) => {
+      console.log(message);
+      socket.broadcast.emit("message", {
+        body: message,
+      });
+    });
+  })
 };
 module.exports = socket;
