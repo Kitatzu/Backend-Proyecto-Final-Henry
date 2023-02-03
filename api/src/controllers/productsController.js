@@ -374,7 +374,21 @@ async function sortProducts(req, res) {
   }
 }
 
+const popularProducts = async (req, res) => {
+  try {
+    const products = await Products.findAll({
+      where: { rating: { [Op.gt]: 3 } },
+    });
+    console.log(products);
+    return res.status(200).json(products);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
+  }
+};
+
 module.exports = {
+  popularProducts,
   postProducts,
   getProducts,
   statusCero,

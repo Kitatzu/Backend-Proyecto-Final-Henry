@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { getReviews } = require("../controllers/reviewController");
 const {
   saveReview,
   validateRating,
@@ -7,5 +8,6 @@ const router = Router();
 
 router.post("/", saveReview);
 router.put("/", validateRating);
+router.get("/product/:productId", getReviews);
 
 module.exports = router;
