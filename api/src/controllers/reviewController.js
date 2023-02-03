@@ -55,4 +55,22 @@ const saveReview = async (req, res) => {
     res.status(500).send("Error");
   }
 };
-module.exports = { saveReview, validateRating };
+
+const getReviews = async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const reviews = await Reviews.findAll({
+      where: { productId },
+      include: {
+        model: Users,
+        attributes: ["firstName", "lastName", "avatar"],
+      },
+    });
+    return res.status(200).json(reviews);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
+  }
+};
+
+module.exports = { saveReview, validateRating, getReviews };
