@@ -35,7 +35,7 @@ let text=`<!DOCTYPE html>
     <div style="background-color: black;color: white;width: 650px;height: 550px;display: flex;justify-content: center;align-items: center;flex-direction: column;padding: 20px;">
         <div><h1>${firstName}:</h1></div>
         <div><b>your verificarion code is: ${code}</b></div>
-       <img style="width: 480;height: 400px;" src="../Downloads/card.png"/>
+       <img style="width: 480;height: 400px;" src=" https://res.cloudinary.com/debfwgutb/image/upload/v1675434666/BoxTech.png"/>
         <div><a style="color:gray" href="https://henrytech.vercel.app/home">click para ir a la tienda</a></div>
     </div>
 </body>
