@@ -373,6 +373,65 @@ async function sortProducts(req, res) {
     res.status(400).json({ message: error });
   }
 }
+async function pageStatusCero(req, res) {
+  let { id } = req.params; // capturamos el numero de pagina
+  //TODO:PAGINAS
+  console.log(id);
+  if (id === "0") {
+    try {
+      const findSProducts = await Products.findAll({
+        where: { status: { [Op.eq]: 0 } },
+      });
+      console.log(findSProducts);
+      const pages = Math.ceil(findSProducts.length / 10);
+      return res.status(200).json({ status: "success", pages });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ status: "error", e });
+    }
+    //TODO:PAGINAS
+  } else {
+    let SelectedP = []; // declaramos el contenedor para las paginas filtradas
+    itemsPage = parseInt(id); //  convertimos a numero el string id para poderlo usar en operaciones de suma
+
+    let EndCursor = itemsPage * 10; // final del cursor de rango de seleccion de items de pagina  *10 items por pagina
+    let StartCursor = EndCursor - 10; // inicio del cursor de rango de seleccion de iterms de pagina
+
+    try {
+      let Productos = await Products.findAll({
+        where: { status: { [Op.eq]: 0 } },
+        include: [
+          {
+            model: Categories,
+            attributes: ["name"],
+          },
+          {
+            model: Proveedores,
+            attributes: ["provider"],
+          },
+          {
+            model: Brands,
+            attributes: ["brand"],
+          },
+          {
+            model: Series,
+            attributes: ["serie"],
+          },
+        ],
+      }); // bajamos los pruductos de Products a Productos con sequelize
+      const ProductosArray = Productos; // convertimos Productos(objeto) en array para poder aplicar slice
+
+      SelectedP = ProductosArray.slice(StartCursor, EndCursor); // generamos la rebanada deade un start(inicio) a un final(end)
+
+      //console.log("Start ", StartCursor);    // para pruebas y control paginado
+      //console.log("End ", EndCursor);         // par pruenas y control paginadp
+
+      res.status(200).json(SelectedP); // enviamos la rebanada(slice) correspondiente
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
+  }
+}
 
 const popularProducts = async (req, res) => {
   try {
@@ -398,4 +457,5 @@ module.exports = {
   restoreProducts,
   pageCurrent,
   sortProducts,
+  pageStatusCero,
 };
