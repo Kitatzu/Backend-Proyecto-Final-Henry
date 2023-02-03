@@ -17,6 +17,6 @@ const socket = () => {
         body: message,
       });
     });
-  })
+  });
 };
 module.exports = socket;
