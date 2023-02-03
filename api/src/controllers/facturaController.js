@@ -1,7 +1,7 @@
 const sequelize = require("../db");
-
 const { Carts, ProductsInCart, Users, Products, Facturas } = sequelize;
 const { Op } = require("sequelize");
+
 const createFactura = async (req, res) => {
   const { paymentId, userId } = req.body;
   try {
@@ -84,6 +84,47 @@ const createFactura = async (req, res) => {
     res.status(500).json({ status: "error", msg: e });
   }
 };
+
+const geTfacturas = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const findFacturas = await Facturas.findAll({ where: { userId } });
+    console.log(findFacturas);
+    return res.status(200).json(findFacturas);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ e });
+  }
+};
+
+const getAllFacturas = async (req, res) => {
+  try {
+    const findFacturas = await Facturas.findAll();
+    console.log(findFacturas);
+    return res.status(200).json(findFacturas);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ e });
+  }
+};
+
+const getFacturaDetail = async (req, res) => {
+  const { facturaId } = req.params;
+  try {
+    const findFacturas = await Facturas.findOne({
+      where: { id: facturaId },
+    });
+    console.log(findFacturas);
+    return res.status(200).json(findFacturas);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ e });
+  }
+};
 module.exports = {
   createFactura,
+  geTfacturas,
+  getAllFacturas,
+  getFacturaDetail,
 };
