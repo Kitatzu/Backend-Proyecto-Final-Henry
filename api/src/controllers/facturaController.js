@@ -115,13 +115,19 @@ const getFacturaDetail = async (req, res) => {
     const findFacturas = await Facturas.findOne({
       where: { id: facturaId },
     });
+
+    const findProducts = await ProductsInCart.findAll({
+      where: { facturaId },
+      include: { model: Products },
+    });
     console.log(findFacturas);
-    return res.status(200).json(findFacturas);
+    return res.status(200).json({ findFacturas, findProducts });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ e });
   }
 };
+
 module.exports = {
   createFactura,
   geTfacturas,
