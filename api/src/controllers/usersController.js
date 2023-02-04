@@ -89,7 +89,7 @@ async function restoreUser(req, res) {
 
 async function updateUser(req, res) {
   let { id } = req.params;
-  const { email, city, country, phone } = req.body;
+  const { city, country, phone } = req.body;
 
   if (req.files?.avatar) {
     try {
@@ -100,34 +100,25 @@ async function updateUser(req, res) {
         },
       });
 
-      let findUser = await Users.findOne({ where: { email } });
-
       const avatarUpdate = await updateAvatarImage(
         req.files.avatar.tempFilePath,
         user.avatarId
       );
 
-      if (user.email === email) {
-        return res.status(404).json(`the email ${email} is repeat`);
-      }
-      if (findUser) {
-        return res.status(400).json(`the email ${email} is registered`);
-      } else {
-        let userUpdate = await user.update({
-          avatar: avatarUpdate.secure_url,
-          avatarId: avatarUpdate.public_id,
-          email: email,
-          city: city,
-          country: country,
-          phone: phone,
-        });
+      let userUpdate = await user.update({
+        avatar: avatarUpdate.secure_url,
+        avatarId: avatarUpdate.public_id,
+        city: city,
+        country: country,
+        phone: phone,
+      });
 
-        res.status(200).json({ ...userUpdate.dataValues });
-      }
+      res.status(200).json(userUpdate);
 
       await fs.unlink(req.files.avatar.tempFilePath);
     } catch (error) {
       res.status(400).json({ error: error });
+      console.log(error);
     }
   } else {
     try {
@@ -138,26 +129,15 @@ async function updateUser(req, res) {
         },
       });
 
-      let findUser = await Users.findOne({ where: { email } });
-
-      if (user.email === email) {
-        return res.status(404).json(`the email ${email} is repeat`);
-      }
-
-      if (findUser) {
-        return res.status(400).json(`the email ${email} is registered`);
-      } else {
-        let userUpdate = await user.update({
-          email: email,
-          city: city,
-          country: country,
-          phone: phone,
-        });
-
-        res.status(200).json({ ...userUpdate.dataValues });
-      }
+      let userUpdate = await user.update({
+        city: city,
+        country: country,
+        phone: phone,
+      });
+      res.status(200).json(userUpdate);
     } catch (error) {
       res.status(400).json(error);
+      console.log(error);
     }
   }
 }
