@@ -50,6 +50,7 @@ const {
   Cupones,
   Series,
   Brands,
+  Messages,
 } = sequelize.models;
 
 //TODO:RELACIONES
@@ -102,6 +103,9 @@ Series.belongsTo(Products, { foreignKey: "productId" });
 
 Brands.hasMany(Products, { foreignKey: "brandId" });
 Products.belongsTo(Brands, { foreignKey: "brandId" });
+
+Users.hasMany(Messages, { foreignKey: "UserId" });
+Messages.belongsTo(Users, { foreignKey: "UserId" });
 //TODO:RELACIONES
 
 module.exports = {
