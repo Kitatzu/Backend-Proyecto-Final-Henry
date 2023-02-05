@@ -23,7 +23,7 @@ async function register(req, res) {
     return Math.round(Math.random() * (max - min) + min);
   }
   let code = getRandomInt(100000, 999999);
-let text=`<!DOCTYPE html>
+  let text = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -39,7 +39,7 @@ let text=`<!DOCTYPE html>
         <div><a style="color:gray" href="https://henrytech.vercel.app/home">click para ir a la tienda</a></div>
     </div>
 </body>
-</html>`
+</html>`;
   async function mail(email, code) {
     let info = await transporter.sendMail({
       from: '"Boxtech" <account@boxtech.com>',
@@ -192,6 +192,7 @@ let text=`<!DOCTYPE html>
         });
       } else {
         let userRole = await Roles.findOne({ where: { rol: "User" } });
+        console.log(userRole);
         let newUser = await Users.create({
           avatar,
           firstName: firstName,
@@ -223,6 +224,7 @@ let text=`<!DOCTYPE html>
         res.status(200).json({
           message: "Succefully registered",
           ...newUser.dataValues,
+          rol: userRole.rol,
           token,
         });
       }
