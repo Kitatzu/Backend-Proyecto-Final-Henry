@@ -1,36 +1,37 @@
 const { Messages, Users } = require("../db.js");
 
-const createMessage = async (userId, messageContent) => {
-  const user = await Users.findByPk(userId);
-  const message = await Messages.create({
-    content: messageContent,
-    userId: user.id,
-  });
-
-  return {
-    userName: user.userName,
-    message: message.content,
-  };
+const createMessage = async (userName, messageContent) => {
+  console.log(messageContent)
+  const {content} = messageContent
+  try {
+    const message = await Messages.create({
+      content,
+    });
+    let user = await Users.findAll({
+      where: {
+        userName: userName,
+      },
+    });
+    message.addUsers(user);
+  
+    return {
+      userName: userName,
+      message: message.content,
+    };
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 const getMessages = async () => {
   try {
     const messages = await Messages.findAll({
-      include: [
-        {
-          model: Users,
-          as: "user",
+      include: {
+        model: Users,
+        attributes: ["userName"],
         },
-      ],
     });
-
-    return messages.map((message) => {
-      console.log(message);
-      return {
-                userName: message.user.userName,
-        message: message.content,
-      };
-    });
+    return messages
   } catch (error) {
     throw new Error(error.message);
   }

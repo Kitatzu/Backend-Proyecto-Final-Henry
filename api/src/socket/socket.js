@@ -20,8 +20,10 @@ const socket = () => {
     }); */
 
     socket.on('message', async (userName, messageContent) => {
+      console.log(userName)
+      console.log(messageContent)
       const message = await createMessage(userName, messageContent);
-      io.emit('message', message);
+      socket.broadcast.emit('message', {content:message});
     });
   
     socket.on('get messages', async () => {
