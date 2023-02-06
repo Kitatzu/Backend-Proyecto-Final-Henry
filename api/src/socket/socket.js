@@ -1,5 +1,6 @@
 const { io } = require("../app");
 const { createNotification } = require("../controllers/createNotification");
+const { createMessage, getMessages } = require('../controllers/messageController');
 
 //TODO: LISTEN CONNECTIONS
 const socket = () => {
@@ -11,13 +12,26 @@ const socket = () => {
       console.log(response);
       socket.broadcast.emit("notification", response);
     });
-    socket.on("message", (message) => {
+    /* socket.on("new message", async (username, messageContent) => {
       console.log(message);
       socket.broadcast.emit("message", {
         body: message,
       });
+    }); */
+
+    socket.on('message', async (userName, messageContent) => {
+      const message = await createMessage(userName, messageContent);
+      io.emit('message', message);
     });
+  
+    socket.on('get messages', async () => {
+      const messages = await getMessages();
+      socket.emit('get messages', messages);
+    });
+
   });
 };
+
+
 //TODO:LISTEN CONNECTIONS
 module.exports = socket;
