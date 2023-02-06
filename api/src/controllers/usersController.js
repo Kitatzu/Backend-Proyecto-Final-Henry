@@ -9,7 +9,6 @@ async function allUsers(req, res) {
   if (email) {
     try {
       let findUser = await Users.findAll({
-
         where: { email },
 
         include: {
@@ -39,6 +38,17 @@ async function allUsers(req, res) {
     } catch (error) {
       res.status(400).json({ message: error });
     }
+  }
+}
+
+async function oneUser(req, res) {
+  let { id } = req.params;
+  try {
+    let user = await Users.findByPk(id);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json(error);
   }
 }
 
@@ -79,7 +89,7 @@ async function restoreUser(req, res) {
 
 async function updateUser(req, res) {
   let { id } = req.params;
-  const { userName, city, country, phone } = req.body;
+  const { city, country, phone } = req.body;
 
   if (req.files?.avatar) {
     try {
@@ -90,34 +100,25 @@ async function updateUser(req, res) {
         },
       });
 
-      let findUser = await Users.findOne({ where: { userName } });
-
       const avatarUpdate = await updateAvatarImage(
         req.files.avatar.tempFilePath,
         user.avatarId
       );
 
-      if (user.userName === userName) {
-        return res.status(404).json(`the username ${userName} is r epeat`);
-      }
-      if (findUser) {
-        return res.status(400).json(`the username ${userName} is registered`);
-      } else {
-        let userUpdate = await user.update({
-          avatar: avatarUpdate.secure_url,
-          avatarId: avatarUpdate.public_id,
-          userName: userName,
-          city: city,
-          country: country,
-          phone: phone,
-        });
+      let userUpdate = await user.update({
+        avatar: avatarUpdate.secure_url,
+        avatarId: avatarUpdate.public_id,
+        city: city,
+        country: country,
+        phone: phone,
+      });
 
-        res.status(200).json({ ...userUpdate.dataValues });
-      }
+      res.status(200).json(userUpdate);
 
       await fs.unlink(req.files.avatar.tempFilePath);
     } catch (error) {
       res.status(400).json({ error: error });
+      console.log(error);
     }
   } else {
     try {
@@ -128,35 +129,24 @@ async function updateUser(req, res) {
         },
       });
 
-      let findUser = await Users.findOne({ where: { userName } });
-
-      if (user.userName === userName)
-        return res.status(404).json(`the username ${userName} is repeat`);
-      if (findUser)
-        return res.status(400).json(`the username ${userName} is registered`);
-
       let userUpdate = await user.update({
-        userName: userName,
         city: city,
         country: country,
         phone: phone,
       });
-
-      res.status(200).json({ ...userUpdate.dataValues, newToken });
+      res.status(200).json(userUpdate);
     } catch (error) {
-      res.status(400).json({ error: error });
+      res.status(400).json(error);
+      console.log(error);
     }
   }
 }
 
-
-
-
 module.exports = {
   allUsers,
+  oneUser,
   statusCero,
   updateUser,
   deleteUser,
   restoreUser,
 };
-

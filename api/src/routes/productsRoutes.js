@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const {
   getProducts,
-  getStatusCero,
+  statusCero,
   postProducts,
   productsId,
   deleteProducts,
@@ -9,13 +9,15 @@ const {
   updateProducts,
   pageCurrent,
   sortProducts,
+  popularProducts,
+  pageStatusCero,
 } = require("../controllers/productsController");
 const fileupload = require("express-fileupload");
 const router = Router();
 
 router.get("/", getProducts);
+router.get("/status", statusCero);
 router.get("/:id", productsId);
-router.get("/status", getStatusCero);
 router.post(
   "/",
   fileupload({
@@ -36,5 +38,7 @@ router.put(
 );
 router.get("/page/:id", pageCurrent);
 router.get("/sort/:id", sortProducts);
+router.get("/other/popular", popularProducts);
+router.get("/page0/:id",pageStatusCero);
 
 module.exports = router;

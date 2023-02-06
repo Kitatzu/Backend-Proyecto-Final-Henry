@@ -49,11 +49,11 @@ module.exports = (sequelize) => {
       },
     },
     rating: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+      type: DataTypes.DOUBLE,
+      defaultValue: 0.0,
       validate: {
-        min: 0,
-        max: 5,
+        min: 0.0,
+        max: 5.0,
       },
     },
   });

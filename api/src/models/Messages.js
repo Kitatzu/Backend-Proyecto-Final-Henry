@@ -1,22 +1,22 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  sequelize.define("reviews", {
+  sequelize.define("messages", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    rating: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-      validate: {
-        min: 0.0,
-        max: 5.0,
-      },
-    },
-    review: {
+    content: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    senderId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    recipientId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   });
