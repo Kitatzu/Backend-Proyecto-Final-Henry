@@ -1,15 +1,40 @@
-const { Message } = require("../db.js");
+const { Messages, Users } = require("../db.js");
 
-const createMessage = async (req, res) => {
-  
+const createMessage = async (userName, messageContent) => {
+  console.log(messageContent)
+  const {content} = messageContent
   try {
-    const { message } = req.body;
-  const time = new Date();
-    const chatMessage = await Message.create({ message, time });
-    res.json({ chatMessage });
+    const message = await Messages.create({
+      content,
+    });
+    let user = await Users.findAll({
+      where: {
+        userName: userName,
+      },
+    });
+    message.addUsers(user);
+  
+    return {
+      userName: userName,
+      message: message.content,
+    };
   } catch (error) {
-    res.status(500).json({ error: err.message });
+    console.log(error)
   }
 };
 
-module.exports =createMessage;
+const getMessages = async () => {
+  try {
+    const messages = await Messages.findAll({
+      include: {
+        model: Users,
+        attributes: ["userName"],
+        },
+    });
+    return messages
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+module.exports = { createMessage, getMessages };

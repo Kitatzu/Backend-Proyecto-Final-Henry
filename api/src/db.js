@@ -104,8 +104,8 @@ Series.belongsTo(Products, { foreignKey: "productId" });
 Brands.hasMany(Products, { foreignKey: "brandId" });
 Products.belongsTo(Brands, { foreignKey: "brandId" });
 
-Users.hasMany(Messages, { foreignKey: "UserId" });
-Messages.belongsTo(Users, { foreignKey: "UserId" });
+Users.hasMany(Messages, { foreignKey: "userId" });
+Messages.belongsTo(Users, { foreignKey: "userId" });
 //TODO:RELACIONES
 
 module.exports = {
