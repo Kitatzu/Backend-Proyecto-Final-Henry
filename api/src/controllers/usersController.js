@@ -2,6 +2,8 @@ const { Users, Roles } = require("../db.js");
 const nodemailer = require("nodemailer");
 const { updateAvatarImage } = require("../middlewares/cloudinary.js");
 const fs = require("fs-extra");
+const {Op}=require("sequelize")
+
 
 async function allUsers(req, res) {
   let { email } = req.query;
@@ -161,6 +163,81 @@ async function updateUser(req, res) {
     }
   }
 }
+async function pageCurrentOne(req, res) {
+  let { id } = req.params;
+  console.log(id);
+  if (id === "0") {
+    try {
+      const findUsers = await Users.findAll({
+        where: { status: { [Op.eq]: 1 } },
+      });
+      const pages = Math.ceil(findUsers.length / 10);
+      return res.status(200).json({ status: "success", pages });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ status: "error", e });
+    }
+  } else {
+    let SelectedP = []; 
+    itemsPage = parseInt(id);
+
+    let EndCursor = itemsPage * 10;
+    let StartCursor = EndCursor - 10; 
+    try {
+      let Usuarios = await Users.findAll({
+        where: { status: { [Op.eq]: 1 } },
+        include:[ {
+          model: Roles,
+          attributes: ["rol"],
+        },],
+      }); 
+      
+const userArray=Usuarios;
+      SelectedP = userArray.slice(StartCursor, EndCursor); 
+      res.status(200).json(SelectedP); 
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
+  }
+}
+
+async function pageCurrentCero(req, res) {
+  let { id } = req.params;
+  console.log(id);
+  if (id === "0") {
+    try {
+      const findUsers = await Users.findAll({
+        where: { status: { [Op.eq]: 0 } },
+      });
+      const pages = Math.ceil(findUsers.length / 10);
+      return res.status(200).json({ status: "success", pages });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ status: "error", e });
+    }
+  } else {
+    let SelectedP = []; 
+    itemsPage = parseInt(id);
+
+    let EndCursor = itemsPage * 10;
+    let StartCursor = EndCursor - 10; 
+    try {
+      let Usuarios = await Users.findAll({
+        where: { status: { [Op.eq]: 0 } },
+        include:[ {
+          model: Roles,
+          attributes: ["rol"],
+        },],
+      }); 
+      
+const userArray=Usuarios;
+      SelectedP = userArray.slice(StartCursor, EndCursor); 
+      res.status(200).json(SelectedP); 
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
+  }
+}
 
 module.exports = {
   allUsers,
@@ -169,4 +246,6 @@ module.exports = {
   updateUser,
   deleteUser,
   restoreUser,
+  pageCurrentOne,
+  pageCurrentCero,
 };
