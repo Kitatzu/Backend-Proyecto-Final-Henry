@@ -10,7 +10,9 @@ const {
   getMessages,
 } = require("../controllers/messageController");
 
-//TODO: LISTEN CONNECTIONS
+
+
+/* let connectedUsers = []; */
 const socket = () => {
   io.on("connection", (socket) => {
     console.log(socket.id, "conectado");
@@ -21,11 +23,22 @@ const socket = () => {
       socket.broadcast.emit("notification", response);
     });
     socket.on("message", async (data) => {
-      const { user, content } = data;
+      const { user, content,createdAt } = data;
       const { userName } = user;
-      const message = await createMessage(userName, content);
+      const message = await createMessage(userName, content,createdAt);
       socket.broadcast.emit("message", data);
     });
+
+
+/* connectedUsers.push(socket.id);
+socket.on("user connected", connectedUsers);
+socket.broadcast.emit("user connected", connectedUsers);
+
+
+socket.on("disconnect", () => {
+  connectedUsers = connectedUsers.filter(user => user !== socket.id);
+  socket.broadcast.emit("user connected", connectedUsers);
+}); */
 
     socket.on("get messages", async () => {
       const messages = await getMessages();
