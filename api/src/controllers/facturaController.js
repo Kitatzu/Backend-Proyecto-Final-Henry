@@ -3,7 +3,7 @@ const { Carts, ProductsInCart, Users, Products, Facturas } = sequelize;
 const { Op } = require("sequelize");
 
 const createFactura = async (req, res) => {
-  const { paymentId, userId } = req.body;
+  const { paymentId, userId, country, city, address } = req.body;
   try {
     if (userId) {
       await Users.findByPk(userId)
@@ -32,6 +32,9 @@ const createFactura = async (req, res) => {
                         paymentId,
                         cartId: cart.id,
                         total: cart.totalPrice,
+                        country,
+                        address,
+                        city,
                       });
                       await newFactura.addProductsInCarts(products);
                       await user.addFacturas(newFactura);

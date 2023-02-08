@@ -1,6 +1,11 @@
 const { io } = require("../app");
 const { createNotification } = require("../controllers/createNotification");
 const {
+  getDataSold,
+  sumUsers,
+  getDataProductsSold,
+} = require("../controllers/dashboardController");
+const {
   createMessage,
   getMessages,
 } = require("../controllers/messageController");
@@ -15,24 +20,42 @@ const socket = () => {
       console.log(response);
       socket.broadcast.emit("notification", response);
     });
-    /* socket.on("new message", async (username, messageContent) => {
-      console.log(message);
-      socket.broadcast.emit("message", {
-        body: message,
-      });
-    }); */
-
     socket.on("message", async (data) => {
-      console.log("socket js 26:1", data);
       const { user, content } = data;
-      console.log(user, content);
-      const message = await createMessage(user, content);
-      socket.broadcast.emit("message", { content: message });
+      const { userName } = user;
+      const message = await createMessage(userName, content);
+      socket.broadcast.emit("message", data);
     });
 
     socket.on("get messages", async () => {
       const messages = await getMessages();
-      socket.emit("get messages", messages);
+      if (messages.length > 0) {
+        socket.emit("get messages", messages);
+      }
+    });
+    socket.on("getDataSold", async () => {
+      const promedio = await getDataSold();
+      socket.emit("DataSold", promedio);
+    });
+    socket.on("sendDataSold", async () => {
+      const promedio = await getDataSold();
+      socket.broadcast.emit("DataSold", promedio);
+    });
+    socket.on("getSumUsers", async () => {
+      const users = await sumUsers();
+      socket.emit("sumUsers", users);
+    });
+    socket.on("sendSumUsers", async () => {
+      const users = await sumUsers();
+      socket.broadcast.emit("sumUsers", users);
+    });
+    socket.on("getProductSold", async () => {
+      const data = await getDataProductsSold();
+      socket.emit("getProductSold", data);
+    });
+    socket.on("sendProductSold", async () => {
+      const data = await getDataProductsSold();
+      socket.broadcast.emit("getProductSold", data);
     });
   });
 };

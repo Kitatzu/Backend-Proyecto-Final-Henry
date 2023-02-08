@@ -17,7 +17,7 @@ const ReviewsRoutes = require("./ReviewsRoutes");
 const verificationRoutes = require("./verificationRoutes");
 const paymentRoutes = require("./paymentRoutes");
 const notificationRoute = require("./notificationRoute");
-
+const eventRoute = require("./eventRoute");
 router.use("/categories", categoriesRoutes);
 router.use("/products", productsRoutes);
 router.use("/providers", providersRoutes);
@@ -43,5 +43,5 @@ router.use("/notification", notificationRoute);
 
 //TODO:REVIEWS
 router.use("/reviews", ReviewsRoutes);
-
+router.use("/events", eventRoute);
 module.exports = router;
