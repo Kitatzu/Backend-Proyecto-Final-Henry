@@ -57,6 +57,9 @@ const socket = () => {
       const data = await getDataProductsSold();
       socket.broadcast.emit("getProductSold", data);
     });
+    socket.on("userConnect", (data) => {
+      socket.broadcast.emit("getUserConnect", data);
+    });
   });
 };
 

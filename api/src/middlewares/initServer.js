@@ -57,7 +57,7 @@ async function createCategories() {
       }),
       await Categories.create({
         name: "Fuente de alimentacion",
-        img: "https://sites.google.com/site/mmelasespenetas/_/rsrc/1490266685908/contenidos-mme/fuentes-de-alimentacion/fuente_alimentacion_modular.png",
+        img: "https://img2.freepng.es/20180425/she/kisspng-power-supply-unit-atx-80-plus-power-converters-the-host-power-supply-5ae1203d711187.1238422115247032934631.jpg",
       }),
     ]);
   } catch (error) {
