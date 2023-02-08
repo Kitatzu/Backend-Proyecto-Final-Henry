@@ -23,9 +23,9 @@ const socket = () => {
       socket.broadcast.emit("notification", response);
     });
     socket.on("message", async (data) => {
-      const { user, content } = data;
+      const { user, content,createdAt } = data;
       const { userName } = user;
-      const message = await createMessage(userName, content);
+      const message = await createMessage(userName, content,createdAt);
       socket.broadcast.emit("message", data);
     });
 

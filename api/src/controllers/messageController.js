@@ -11,6 +11,7 @@ const createMessage = async (userName, messageContent) => {
     const message = await Messages.create({
       content: messageContent,
       userId: user.id,
+      
     });  
     return {
       userName: userName,
@@ -28,7 +29,7 @@ const getMessages = async () => {
       order: [['createdAt', 'ASC']],
       include: {
         model: Users,
-        attributes: ["userName", "avatar"],
+        attributes: ["userName", "avatar","createdAt"],
         /* through: {
           attributes: [],
         }, */
