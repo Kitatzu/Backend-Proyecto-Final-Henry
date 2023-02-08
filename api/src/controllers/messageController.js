@@ -11,10 +11,12 @@ const createMessage = async (userName, messageContent) => {
     const message = await Messages.create({
       content: messageContent,
       userId: user.id,
+      
     });  
     return {
       userName: userName,
       message: message.content,
+      createdAt:message.createdAt,
     };
   } catch (error) {
     console.log(error);
@@ -24,9 +26,10 @@ const createMessage = async (userName, messageContent) => {
 const getMessages = async () => {
   try {
     const messages = await Messages.findAll({
+      order: [['createdAt', 'ASC']],
       include: {
         model: Users,
-        attributes: ["userName", "avatar"],
+        attributes: ["userName", "avatar","createdAt"],
         /* through: {
           attributes: [],
         }, */
