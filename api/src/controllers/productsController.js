@@ -335,7 +335,7 @@ async function pageCurrent(req, res) {
           },
           {
             model: Series,
-            attributes: ["serie"],
+            attributes: ["serie", "status"],
           },
         ],
       }); // bajamos los pruductos de Products a Productos con sequelize
