@@ -2,8 +2,7 @@ const { Users, Roles } = require("../db.js");
 const nodemailer = require("nodemailer");
 const { updateAvatarImage } = require("../middlewares/cloudinary.js");
 const fs = require("fs-extra");
-const {Op}=require("sequelize")
-
+const { Op } = require("sequelize");
 
 async function allUsers(req, res) {
   let { email } = req.query;
@@ -158,23 +157,25 @@ async function pageCurrentOne(req, res) {
       return res.status(500).json({ status: "error", e });
     }
   } else {
-    let SelectedP = []; 
+    let SelectedP = [];
     itemsPage = parseInt(id);
 
     let EndCursor = itemsPage * 10;
-    let StartCursor = EndCursor - 10; 
+    let StartCursor = EndCursor - 10;
     try {
       let Usuarios = await Users.findAll({
         where: { status: { [Op.eq]: 1 } },
-        include:[ {
-          model: Roles,
-          attributes: ["rol"],
-        },],
-      }); 
-      
-const userArray=Usuarios;
-      SelectedP = userArray.slice(StartCursor, EndCursor); 
-      res.status(200).json(SelectedP); 
+        include: [
+          {
+            model: Roles,
+            attributes: ["rol"],
+          },
+        ],
+      });
+
+      const userArray = Usuarios;
+      SelectedP = userArray.slice(StartCursor, EndCursor);
+      res.status(200).json(SelectedP);
     } catch (error) {
       res.status(400).json({ message: error });
     }
@@ -196,29 +197,43 @@ async function pageCurrentCero(req, res) {
       return res.status(500).json({ status: "error", e });
     }
   } else {
-    let SelectedP = []; 
+    let SelectedP = [];
     itemsPage = parseInt(id);
 
     let EndCursor = itemsPage * 10;
-    let StartCursor = EndCursor - 10; 
+    let StartCursor = EndCursor - 10;
     try {
       let Usuarios = await Users.findAll({
         where: { status: { [Op.eq]: 0 } },
-        include:[ {
-          model: Roles,
-          attributes: ["rol"],
-        },],
-      }); 
-      
-const userArray=Usuarios;
-      SelectedP = userArray.slice(StartCursor, EndCursor); 
-      res.status(200).json(SelectedP); 
+        include: [
+          {
+            model: Roles,
+            attributes: ["rol"],
+          },
+        ],
+      });
+
+      const userArray = Usuarios;
+      SelectedP = userArray.slice(StartCursor, EndCursor);
+      res.status(200).json(SelectedP);
     } catch (error) {
       res.status(400).json({ message: error });
     }
   }
 }
 
+async function rootUser(req, res) {
+  const { rol, userId } = req.body;
+  try {
+    const findRol = await Roles.findOne({ where: rol });
+    const findUser = await Users.findByPk(userId);
+    await findUser.setRole(findRol);
+    return res.status(200).json(findUser);
+  } catch (e) {
+    console.log(e);
+    return res.stauts(500).json(e);
+  }
+}
 module.exports = {
   allUsers,
   oneUser,
@@ -228,4 +243,5 @@ module.exports = {
   restoreUser,
   pageCurrentOne,
   pageCurrentCero,
+  rootUser,
 };
