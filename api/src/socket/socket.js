@@ -16,24 +16,18 @@ const socket = () => {
       console.log(response);
       socket.broadcast.emit("notification", response);
     });
-    /* socket.on("new message", async (username, messageContent) => {
-      console.log(message);
-      socket.broadcast.emit("message", {
-        body: message,
-      });
-    }); */
-
     socket.on("message", async (data) => {
-      console.log("socket js 26:1", data);
-      const { user, content } = data;
-      console.log(user, content);
-      const message = await createMessage(user, content);
-      socket.broadcast.emit("message", { content: message });
+           const { user, content } = data;
+      const {userName}=user;
+           const message = await createMessage(userName, content);
+            socket.broadcast.emit("message", data);
     });
 
     socket.on("get messages", async () => {
       const messages = await getMessages();
-      socket.emit("get messages", messages);
+      if (messages.length > 0) {
+        socket.emit("get messages", messages);
+      }
     });
     socket.on("getDataSold", async () => {
       const promedio = await getDataSold();
