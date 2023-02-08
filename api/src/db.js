@@ -70,8 +70,8 @@ ProductsInCart.belongsTo(Products, { foreignKey: "productId" });
 Users.hasMany(Facturas, { foreignKey: "userId" });
 Facturas.belongsTo(Users, { foreignKey: "userId" });
 
-ProductsInCart.hasMany(Facturas, { foreignKey: "facturaId" });
-Facturas.belongsTo(ProductsInCart, { foreignKey: "facturaId" });
+Facturas.hasMany(ProductsInCart, { foreignKey: "facturaId" });
+ProductsInCart.belongsTo(Facturas, { foreignKey: "facturaId" });
 
 Products.belongsToMany(Categories, { through: "categoriesInProducts" });
 Categories.belongsToMany(Products, { through: "categoriesInProducts" });
