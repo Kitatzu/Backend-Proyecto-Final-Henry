@@ -1,5 +1,6 @@
 const { io } = require("../app");
 const { createNotification } = require("../controllers/createNotification");
+const { getDataSold } = require("../controllers/dashboardController");
 const {
   createMessage,
   getMessages,
@@ -33,6 +34,11 @@ const socket = () => {
     socket.on("get messages", async () => {
       const messages = await getMessages();
       socket.emit("get messages", messages);
+    });
+    socket.on("getDataSold", async () => {
+      const promedio = await getDataSold();
+      console.log(promedio, "ENTRA PETICION_SOCKET");
+      socket.emit("DataSold", promedio);
     });
   });
 };
