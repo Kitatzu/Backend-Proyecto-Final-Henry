@@ -20,7 +20,7 @@ server.listen(PORT, () => {
   console.log(`%s listening at ${PORT}`);
   try {
     conn
-      .sync({ force: true })
+      .sync({ force: false })
       .then((response) => {
         createRoles();
         createCategories();
