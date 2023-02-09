@@ -18,6 +18,7 @@ socket();
 
 server.listen(PORT, () => {
   console.log(`%s listening at ${PORT}`);
+
   try {
     conn
       .sync({ force: false })
