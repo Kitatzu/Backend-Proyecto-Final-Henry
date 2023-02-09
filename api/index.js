@@ -21,7 +21,7 @@ server.listen(PORT, () => {
 
   try {
     conn
-      .sync({ force: false })
+      .sync({ force: true })
       .then((response) => {
         createRoles();
         createCategories();
