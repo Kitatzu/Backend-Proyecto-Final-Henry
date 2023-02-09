@@ -12,6 +12,7 @@ const socket = require("./src/socket/socket.js");
 socket();
 
 //TODO: SOCKET
+
 server.listen(3001, () => {
   console.log("%s listening at 3001");
   try {
