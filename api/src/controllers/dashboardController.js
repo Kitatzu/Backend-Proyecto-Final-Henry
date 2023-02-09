@@ -13,9 +13,7 @@ const getDataProductsSold = async () => {
       return { country: data.country, [data.name]: data.quantitysold };
     });
     let result = [];
-    // array.map((data) => {
-    //     return { country: data.country, [data.name]: data.quantitysold };
-    //   });
+
     let map = new Map();
 
     for (let i = 0; i < array.length; i++) {

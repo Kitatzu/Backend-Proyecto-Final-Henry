@@ -225,13 +225,13 @@ async function pageCurrentCero(req, res) {
 async function rootUser(req, res) {
   const { rol, userId } = req.body;
   try {
-    const findRol = await Roles.findOne({ where: rol });
+    const findRol = await Roles.findOne({ where: { rol } });
     const findUser = await Users.findByPk(userId);
     await findUser.setRole(findRol);
     return res.status(200).json(findUser);
   } catch (e) {
     console.log(e);
-    return res.stauts(500).json(e);
+    return res.status(500).json(e);
   }
 }
 module.exports = {
