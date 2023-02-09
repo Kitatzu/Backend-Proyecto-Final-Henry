@@ -34,7 +34,8 @@ const getDataProductsSold = async () => {
     const keys = data[0].map((data, key) => {
       return data.name;
     });
-    return { keys, data: result };
+    const filterKeys = Array.from(new Set(keys));
+    return { keys: filterKeys, data: result };
   } catch (e) {
     console.log(e);
     return false;
