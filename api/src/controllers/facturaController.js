@@ -1,6 +1,9 @@
 const sequelize = require("../db");
 const { Carts, ProductsInCart, Users, Products, Facturas } = sequelize;
 const { Op } = require("sequelize");
+const pdfMake = require("pdfmake/build/pdfmake.js");
+const pdfFonts = require("pdfmake/build/vfs_fonts.js");
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const createFactura = async (req, res) => {
   const { paymentId, userId, country, city, address } = req.body;
@@ -131,9 +134,30 @@ const getFacturaDetail = async (req, res) => {
   }
 };
 
+const getFilePdf = async (req, res) => {
+  const { file, facturaId } = req.body;
+  try {
+    if (!file) return res.status(500).send("Error!");
+    const fileBuffer = Buffer.from(file, "base64");
+    const doc = {
+      content: [{ image: file }],
+    };
+
+    const pdf = await pdfMake.createPdf(doc);
+    pdf.getBase64((encoded) => {
+      res.contentType("application/pdf");
+      res.send(Buffer.from(encoded, "base64"));
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json(e);
+  }
+};
+
 module.exports = {
   createFactura,
   geTfacturas,
   getAllFacturas,
   getFacturaDetail,
+  getFilePdf,
 };
