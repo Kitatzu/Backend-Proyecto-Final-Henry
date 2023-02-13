@@ -138,9 +138,11 @@ const getFilePdf = async (req, res) => {
   const { file, facturaId } = req.body;
   try {
     if (!file) return res.status(500).send("Error!");
-    const fileBuffer = Buffer.from(file, "base64");
+    const image = new Image();
+    image.src = file;
+
     const doc = {
-      content: [{ image: file }],
+      content: [{ image }],
     };
 
     const pdf = await pdfMake.createPdf(doc);
